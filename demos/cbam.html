@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>cbam insight · 배출량 산정 대시보드 (Demo)</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <link rel="stylesheet" href="assets/demo.css" />
+  <style>
+    :root { --accent: #6fbf3f; --accent-soft: #eef8e6; --accent-ink: #fff; --teal: #0b5f5a; --amber: #e2a43a; }
+    .page-h { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 14px; flex-wrap: wrap; }
+    .page-h h1 { margin: 0; font-size: 22px; font-weight: 800; }
+    .page-h p { margin: 2px 0 0; color: var(--sub); }
+    .page-h .acts { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .page-h .sel { min-width: 260px; }
+    .mode-bar { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border: 1px solid var(--line); border-radius: 10px; background: #fff; margin-bottom: 14px; font-size: 12px; color: var(--sub); flex-wrap: wrap; }
+    .mode-bar b { color: var(--accent); font-size: 14px; }
+    .mode-bar b.st { color: #64748b; }
+    .mode-bar .r { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    .cmp { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .cmp > div { border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+    .cmp .t { font-size: 12px; color: var(--sub); }
+    .cmp .v { font-size: 21px; font-weight: 800; margin: 4px 0; }
+    .cmp .s { font-size: 12px; color: var(--sub); }
+    .cmp .d { font-size: 12px; font-weight: 700; }
+    .d.down { color: var(--teal); } .d.up { color: var(--neg); }
+    .cmp-note { margin: 10px 0 0; font-size: 12px; color: var(--sub); }
+    .hero-kpi { background: linear-gradient(135deg, #a3d977, #86c75a); color: #fff; border: 0; }
+    .hero-kpi .lbl { color: #f2ffe8; }
+    .hero-kpi .val { font-size: 34px; }
+    .hero-kpi .val small { color: #f2ffe8; }
+    .ratio { height: 8px; border-radius: 4px; background: rgba(255,255,255,.35); overflow: hidden; margin: 10px 0 6px; display: flex; }
+    .ratio i { background: #fff; } .ratio u { background: #ffe08a; }
+    .ins { display: grid; gap: 10px; }
+    .ins div { border-left: 4px solid; background: #f7f8fa; padding: 10px 14px; border-radius: 0 8px 8px 0; }
+    .ins b { display: block; font-size: 13.5px; }
+    .ins span { color: var(--sub); font-size: 12.5px; }
+    .ins .g { border-color: #3c8d3a; } .ins .b { border-color: #3b5bdb; } .ins .r { border-color: #d9480f; } .ins .p { border-color: #8b5cf6; } .ins .o { border-color: #f59f00; }
+    .peers { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+    .peer { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; cursor: pointer; text-align: left; background: #fff; }
+    .peer:hover { border-color: var(--accent); }
+    .peer.cur { border: 2px solid var(--accent); background: #f8fdf3; }
+    .peer b { display: block; font-size: 13px; } .peer .v { font-size: 20px; font-weight: 800; color: var(--teal); margin: 6px 0 0; } .peer small { color: var(--sub); }
+    .legend { display: flex; gap: 14px; font-size: 11.5px; color: var(--sub); margin: -6px 0 8px; }
+    .legend i { display: inline-block; width: 9px; height: 9px; margin-right: 5px; }
+    .act-wrap { display: grid; grid-template-columns: 240px 1fr; gap: 20px; align-items: center; }
+    .donut-box { position: relative; height: 220px; }
+    .donut-c { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; pointer-events: none; }
+    .donut-c small { display: block; color: var(--sub); font-size: 11px; } .donut-c b { font-size: 16px; }
+    .neg { color: var(--teal); }
+    .hist td:first-child { color: var(--sub); }
+    @media (max-width: 1100px) { .cmp { grid-template-columns: 1fr; } .act-wrap { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <button class="burger" type="button" aria-label="메뉴 접기">☰</button>
+    <div class="brand"><svg class="brand-mark" viewBox="0 0 26 26"><path d="M4 22C4 10 12 4 23 4c0 11-6 19-19 18z" fill="#86c75a"/><path d="M4 22C9 15 14 11 20 8" stroke="#fff" stroke-width="2" fill="none"/></svg>cbam insight</div>
+    <div class="top-r">
+      <span class="demo-note">샘플 데이터 데모</span>
+      <span class="who">관리자 님</span>
+      <button class="ico-btn" type="button" data-demo-only="설정은 데모에서 제공되지 않습니다">⚙</button>
+      <div class="ecolink"><button type="button">ECO LINK <i>↗</i></button></div>
+      <button class="logout" type="button" data-demo-only="데모 화면입니다">LOGOUT</button>
+    </div>
+  </header>
+  <div class="shell">
+    <nav class="side">
+      <div class="side-grp"><b>기준정보</b><a href="#">기준정보 목록</a></div>
+      <div class="side-grp"><b>프로젝트</b><a href="#">프로젝트 목록</a></div>
+      <div class="side-grp"><b>데이터수집</b><a href="#">생산공정 목록</a></div>
+      <div class="side-grp"><b>배출량 산정</b><a href="#" class="on">배출량 산정</a></div>
+      <div class="side-grp"><b>보고서 관리</b><a href="#">보고서 목록</a></div>
+    </nav>
+    <main class="main">
+      <div class="page-h">
+        <div><h1 id="pTitle">-</h1><p id="pYear">-</p></div>
+        <div class="acts">
+          <select class="sel" id="projSel" aria-label="프로젝트"></select>
+          <button class="btn" id="refreshBtn" type="button">↻ 새로고침</button>
+          <button class="btn pri" id="modeBtn" type="button">정적모드 전환</button>
+        </div>
+      </div>
+
+      <div class="mode-bar" id="modeBar"></div>
+
+      <section class="card">
+        <div class="card-h"><h3>정적 데이터와 동적 데이터 비교</h3><span class="hint">동일 프로젝트 기준 · SEE 단위 tCO₂/ton</span></div>
+        <div class="cmp" id="cmp"></div>
+        <p class="cmp-note" id="cmpNote"></p>
+        <div id="histBox" style="margin-top:18px;">
+          <div class="card-h"><h3>동적 데이터 변경 이력</h3><span class="hint">현재 브라우저 세션에 최근 30회 보관 · <a href="#" id="clearHist" style="color:var(--accent);font-weight:700;">이력 비우기</a></span></div>
+          <div class="tbl-wrap" style="max-height:220px;"><table class="tbl hist"><thead><tr><th>조회 시각</th><th class="r">직접 SEE</th><th class="r">간접 SEE</th><th class="r">총 SEE</th><th class="r">직전 대비</th></tr></thead><tbody id="histBody"></tbody></table></div>
+        </div>
+      </section>
+
+      <div class="row g5" id="kpis" style="margin-top:14px;"></div>
+
+      <div class="row g2">
+        <section class="card"><div class="card-h"><h3>이 프로젝트에서 확인할 점</h3><span class="hint" id="insCnt"></span></div><div class="ins" id="ins"></div></section>
+        <section class="card"><div class="card-h"><h3>같은 사업장 · 연도의 프로젝트</h3><span class="hint">카드를 누르면 해당 프로젝트로 전환</span></div><div class="peers" id="peers"></div></section>
+      </div>
+
+      <section class="card">
+        <div class="card-h"><h3>공정 · 제품별 SEE</h3><span class="hint">행을 누르면 아래에 활동자료별 내역이 열립니다</span></div>
+        <div class="legend"><span><i style="background:var(--teal)"></i>직접</span><span><i style="background:var(--amber)"></i>간접</span></div>
+        <div class="tbl-wrap"><table class="tbl"><thead><tr><th>공정</th><th>대상제품</th><th>구분</th><th class="r">생산량(ton)</th><th class="r">SEE total</th><th style="width:30%">직접 / 간접</th><th class="c">산정</th></tr></thead><tbody id="procBody"></tbody></table></div>
+      </section>
+
+      <section class="card">
+        <div class="card-h"><h3>활동자료별 내재배출량</h3><span class="hint" id="actProc"></span></div>
+        <div class="act-wrap">
+          <div class="donut-box"><canvas id="donut"></canvas><div class="donut-c"><div><small>순 합계 (tCO₂)</small><b id="netSum">-</b></div></div></div>
+          <div>
+            <div class="tbl-wrap"><table class="tbl"><thead><tr><th>활동자료</th><th>구분</th><th class="r">내재배출량(tCO₂)</th><th class="r">비중</th></tr></thead><tbody id="actBody"></tbody></table></div>
+            <p class="cmp-note">차감 항목(물질수지 · 열 회수 등)은 도넛에서 제외하고 순 합계에만 반영했습니다.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <footer class="foot"><span>Portfolio demo · <b>cbam insight</b> 화면을 일반화한 샘플 데이터로 재구성</span><span>dev-han.github.io</span></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="assets/demo.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    var D = Demo, $ = D.$, fmt = D.fmt;
+    D.init("cbam");
+    var REFRESH_SEC = 10;
+
+    // ---- 샘플 데이터 (tCO₂, ton) ----
+    var A = function (name, kind, em) { return { name: name, kind: kind, em: em }; };
+    var PROJECTS = [
+      { id: "p1", year: 2025, site: "샘플철강 A사업장", name: "2025년 · 샘플철강 A사업장", seed: 3, procs: [
+        { name: "열처리 공정", product: "스테인리스 강판 1219", prod: 1240, done: true, acts: [A("연료 연소 (LNG)", "d", 982.4), A("폐가스 소각", "d", 121.8), A("스팀 사용", "d", 64.2), A("공정배출", "d", 35.6), A("전력 사용", "i", 412.7), A("물질수지 (탄소 투입-산출)", "d", -18.3), A("측정기반", "d", 2.1), A("보일러 - 공정배출량", "d", 0)] },
+        { name: "압연 공정", product: "스테인리스 강판 1219", prod: 2860, done: true, acts: [A("연료 연소 (LNG)", "d", 1448.9), A("전력 사용", "i", 1121.5), A("스팀 사용", "d", 88.3), A("공기압축기 - 전력 간접배출", "i", 96.4), A("공정배출", "d", 12.2)] },
+        { name: "산세 공정", product: "냉연 코일 914", prod: 1920, done: true, acts: [A("연료 연소 (LNG)", "d", 402.6), A("전력 사용", "i", 318.9), A("산 재생 설비", "d", 74.5), A("열 회수", "d", -22.4), A("대기오염방지시설 - 전력 간접배출", "i", 41.2)] }
+      ] },
+      { id: "p2", year: 2025, site: "샘플철강 A사업장", name: "2025년 · 샘플철강 B라인", seed: 11, procs: [
+        { name: "전기로 용해", product: "탄소강 빌릿", prod: 3420, done: true, acts: [A("전극 소모", "d", 286.4), A("연료 연소 (LNG)", "d", 512.8), A("전력 사용", "i", 2960.4), A("가탄재 투입", "d", 318.2), A("슬래그 처리", "d", -41.5)] },
+        { name: "연속 주조", product: "탄소강 빌릿", prod: 3380, done: true, acts: [A("연료 연소 (LNG)", "d", 188.6), A("전력 사용", "i", 402.1), A("스팀 사용", "d", 22.4)] },
+        { name: "선재 압연", product: "선재 5.5mm", prod: 2950, done: false, acts: [A("가열로 연료", "d", 1212.4), A("전력 사용", "i", 688.3), A("공정배출", "d", 18.4)] }
+      ] },
+      { id: "p3", year: 2025, site: "샘플철강 A사업장", name: "2025년 · 샘플철강 도금라인", seed: 21, procs: [
+        { name: "용융 아연도금", product: "도금 강판 GI", prod: 1810, done: true, acts: [A("연료 연소 (LNG)", "d", 640.2), A("아연 용해로", "d", 152.8), A("전력 사용", "i", 512.6), A("스팀 사용", "d", 31.2)] },
+        { name: "후처리 공정", product: "도금 강판 GI", prod: 1790, done: true, acts: [A("전력 사용", "i", 128.4), A("건조로 연료", "d", 86.1)] }
+      ] }
+    ];
+    // 동적 데이터: 저장 이후 원천 데이터가 바뀐 상황을 시뮬레이션 (활동자료별 드리프트)
+    PROJECTS.forEach(function (p) {
+      var r = D.rand(p.seed);
+      p.procs.forEach(function (pr) { pr.dynProd = pr.prod * (1 + (r() - .5) * .03); pr.acts.forEach(function (a) { a.dyn = a.em * (0.86 + r() * .18); }); });
+    });
+
+    var state = { pid: D.store.get("cbam.pid", "p1"), mode: D.store.get("cbam.mode", "dynamic"), proc: 0, timer: null, left: REFRESH_SEC };
+    var proj = function () { return PROJECTS.filter(function (p) { return p.id === state.pid; })[0] || PROJECTS[0]; };
+
+    // ---- 계산 ----
+    var calc = function (p, mode) {
+      var dyn = mode === "dynamic", out = { direct: 0, indirect: 0, prod: 0, procs: [] };
+      p.procs.forEach(function (pr) {
+        var prod = dyn ? pr.dynProd : pr.prod, d = 0, i = 0;
+        pr.acts.forEach(function (a) { var v = dyn ? a.dyn : a.em; if (a.kind === "d") d += v; else i += v; });
+        out.direct += d; out.indirect += i; out.prod += prod;
+        out.procs.push({ ref: pr, prod: prod, d: d, i: i, seeD: d / prod, seeI: i / prod, see: (d + i) / prod });
+      });
+      out.seeD = out.direct / out.prod; out.seeI = out.indirect / out.prod; out.see = out.seeD + out.seeI;  // 생산량 가중 평균
+      return out;
+    };
+    var diffTxt = function (a, b) { var dv = a - b, pc = b ? dv / b * 100 : 0; return { cls: dv < 0 ? "down" : "up", txt: "차이 " + D.signed(dv, 4) + " (" + D.signed(pc, 2) + "%)", pc: pc }; };
+
+    // ---- 렌더 ----
+    var donut = new Chart($("#donut"), { type: "doughnut", data: { labels: [], datasets: [{ data: [], backgroundColor: [], borderWidth: 0 }] },
+      options: { cutout: "64%", plugins: { legend: { display: false }, tooltip: { callbacks: { label: function (c) { return c.label + ": " + fmt(c.raw, 1) + " tCO₂"; } } } } } });
+
+    var histKey = function () { return "cbam.hist." + state.pid; };
+    var pushHist = function (r) {
+      var h = D.store.get(histKey(), []);
+      h.unshift({ t: new Date().toLocaleString("ko-KR"), d: r.seeD, i: r.seeI, s: r.see });
+      D.store.set(histKey(), h.slice(0, 30));
+    };
+
+    var render = function (flash) {
+      var p = proj(), st = calc(p, "static"), dy = calc(p, "dynamic"), cur = state.mode === "dynamic" ? dy : st;
+      $("#pTitle").textContent = p.name; $("#pYear").textContent = p.year + "년";
+      $("#modeBtn").textContent = state.mode === "dynamic" ? "정적모드 전환" : "동적모드 전환";
+      $("#modeBar").innerHTML = state.mode === "dynamic"
+        ? '<b>동적모드</b><span>' + REFRESH_SEC + '초마다 최신 데이터를 다시 조회하고 SEE를 재계산합니다. 이력은 현재 브라우저 세션에 저장됩니다.</span><span class="r"><span class="pulse"></span>다음 갱신까지 <strong id="left">' + state.left + '</strong>초</span>'
+        : '<b class="st">정적모드</b><span>산정 완료 시점에 저장된 값을 표시합니다. 원본 데이터는 변경되지 않습니다.</span><span class="r"><span class="pulse off"></span>자동 갱신 꺼짐</span>';
+
+      // 비교 카드
+      var cards = [["직접 SEE", "seeD"], ["간접 SEE", "seeI"], ["총 SEE", "see"]];
+      $("#cmp").innerHTML = cards.map(function (c) {
+        var df = diffTxt(dy[c[1]], st[c[1]]);
+        return '<div><div class="t">' + c[0] + '</div><div class="v num">동적 ' + fmt(dy[c[1]], 4) + '</div><div class="s num">정적 ' + fmt(st[c[1]], 4) + '</div><div class="d ' + df.cls + ' num">' + df.txt + "</div></div>";
+      }).join("");
+      $("#cmpNote").textContent = "정적 기준 제품 " + p.procs.length + "개 공정 · 동적 " + p.procs.length + "개 공정 · 생산량 정적 " + fmt(st.prod, 2) + " ton / 동적 " + fmt(dy.prod, 2) + " ton";
+      $("#histBox").style.display = state.mode === "dynamic" ? "" : "none";
+      var h = D.store.get(histKey(), []);
+      $("#histBody").innerHTML = h.length ? h.map(function (r, i) {
+        var prev = h[i + 1], dd = prev ? r.s - prev.s : null;
+        return "<tr><td>" + r.t + '</td><td class="r num">' + fmt(r.d, 4) + '</td><td class="r num">' + fmt(r.i, 4) + '</td><td class="r num"><b>' + fmt(r.s, 4) + '</b></td><td class="r num ' + (dd === null ? "" : dd < 0 ? "neg" : "") + '">' + (dd === null ? "–" : D.signed(dd, 4)) + "</td></tr>";
+      }).join("") : '<tr><td colspan="5" class="empty">아직 이력이 없습니다</td></tr>';
+
+      // KPI
+      var doneN = p.procs.filter(function (x) { return x.done; }).length, dShare = cur.direct / (cur.direct + cur.indirect) * 100;
+      $("#kpis").innerHTML =
+        '<div class="card kpi hero-kpi"><div class="lbl">총 고유 내재 배출량 (SEE total, 생산량 가중 평균)</div><div class="val num">' + fmt(cur.see, 4) + '<small>tCO₂/ton</small></div><div class="ratio"><i style="width:' + dShare + '%"></i><u style="width:' + (100 - dShare) + '%"></u></div><div class="meta" style="color:#f2ffe8">직접 ' + D.pct(dShare) + " / 간접 " + D.pct(100 - dShare) + "</div></div>" +
+        '<div class="card kpi"><div class="lbl">직접 SEE</div><div class="val num">' + fmt(cur.seeD, 4) + '<small>tCO₂/ton</small></div><div class="meta">총 ' + fmt(cur.direct, 1) + " tCO₂</div></div>" +
+        '<div class="card kpi"><div class="lbl">간접 SEE</div><div class="val num">' + fmt(cur.seeI, 4) + '<small>tCO₂/ton</small></div><div class="meta">총 ' + fmt(cur.indirect, 1) + " tCO₂</div></div>" +
+        '<div class="card kpi"><div class="lbl">산정 완료 공정</div><div class="val num">' + doneN + " / " + p.procs.length + '</div><div class="meta">완료율 ' + D.pct(doneN / p.procs.length * 100, 0) + "</div></div>" +
+        '<div class="card kpi"><div class="lbl">대상 공정 / 총 생산량</div><div class="val num">' + p.procs.length + '<small>개</small></div><div class="meta">' + fmt(cur.prod, 2) + " ton</div></div>";
+      if (flash) $("#kpis").querySelectorAll(".val").forEach(function (v) { v.classList.remove("flash"); void v.offsetWidth; v.classList.add("flash"); });
+
+      // 인사이트
+      var ins = [], avg = cur.see, top = cur.procs.slice().sort(function (a, b) { return b.see - a.see; })[0];
+      if (doneN === p.procs.length) ins.push(["g", "모든 공정의 산정과 저장이 끝났습니다", "신고서 작성 단계로 넘어가도 좋습니다."]);
+      else ins.push(["o", (p.procs.length - doneN) + "개 공정의 산정이 끝나지 않았습니다", p.procs.filter(function (x) { return !x.done; }).map(function (x) { return x.name; }).join(", ") + " — 저장 후 신고서에 반영됩니다."]);
+      if (dShare >= 60) ins.push(["b", "직접 배출이 " + D.pct(dShare, 0) + "를 차지합니다", "연료 사용 · 공정배출 · 물질수지 항목이 핵심입니다. 아래 활동자료별 내역에서 상위 항목을 확인해 보세요."]);
+      else ins.push(["b", "간접 배출(전력) 비중이 " + D.pct(100 - dShare, 0) + "입니다", "전력 배출계수와 사용량 계측 단위를 우선 점검하세요."]);
+      if (top && top.see / avg >= 1.15) ins.push(["r", "\"" + top.ref.name + "\" 공정의 SEE가 평균의 " + fmt(top.see / avg, 1) + "배입니다", "제품 " + top.ref.product + " · " + fmt(top.see, 4) + " tCO₂/ton. 감축 효과가 가장 큰 후보입니다."]);
+      var dv = diffTxt(dy.see, st.see);
+      if (Math.abs(dv.pc) >= 3) ins.push(["p", "동적 재계산값이 저장값보다 " + fmt(Math.abs(dv.pc), 1) + "% " + (dv.pc < 0 ? "낮습니다" : "높습니다"), "저장 이후 원천 데이터가 바뀌었습니다. 재저장이 필요한지 검토하세요."]);
+      $("#insCnt").textContent = ins.length + "건";
+      $("#ins").innerHTML = ins.map(function (x) { return '<div class="' + x[0] + '"><b>' + D.esc(x[1]) + "</b><span>" + D.esc(x[2]) + "</span></div>"; }).join("");
+
+      // 같은 사업장 프로젝트
+      $("#peers").innerHTML = PROJECTS.map(function (q) {
+        var c = calc(q, state.mode), ds = c.direct / (c.direct + c.indirect) * 100;
+        return '<button type="button" class="peer' + (q.id === p.id ? " cur" : "") + '" data-pid="' + q.id + '"><b>' + q.name + '</b><div class="v num">' + fmt(c.see, 4) + "</div><small>tCO₂/ton · 공정 " + q.procs.length + "개 · 직접 " + D.pct(ds, 0) + "</small></button>";
+      }).join("");
+
+      // 공정 표
+      var maxSee = Math.max.apply(null, cur.procs.map(function (x) { return x.see; }));
+      $("#procBody").innerHTML = cur.procs.map(function (x, i) {
+        return '<tr class="click' + (i === state.proc ? " sel" : "") + '" data-i="' + i + '"><td>' + x.ref.name + "</td><td>" + x.ref.product + '</td><td>자체</td><td class="r num">' + fmt(x.prod, 2) + '</td><td class="r num"><b>' + fmt(x.see, 4) + '</b></td><td><div class="bar" title="직접 ' + fmt(x.seeD, 4) + " / 간접 " + fmt(x.seeI, 4) + '"><i style="width:' + (x.seeD / maxSee * 100) + '%;background:var(--teal)"></i><i style="width:' + (x.seeI / maxSee * 100) + '%;background:var(--amber)"></i></div></td><td class="c">' + (x.ref.done ? '<span class="badge ok">완료</span>' : '<span class="badge warn">미완료</span>') + "</td></tr>";
+      }).join("");
+
+      // 활동자료
+      var pr = cur.procs[state.proc] || cur.procs[0], dyn = state.mode === "dynamic";
+      var acts = pr.ref.acts.map(function (a) { return { name: a.name, kind: a.kind, v: dyn ? a.dyn : a.em }; }).sort(function (a, b) { return b.v - a.v; });
+      var pos = acts.filter(function (a) { return a.v > 0; }), posSum = pos.reduce(function (s, a) { return s + a.v; }, 0), net = acts.reduce(function (s, a) { return s + a.v; }, 0);
+      $("#actProc").textContent = pr.ref.name + " · " + (dyn ? "동적" : "정적");
+      $("#netSum").textContent = fmt(net, 1);
+      $("#actBody").innerHTML = acts.map(function (a) {
+        return "<tr><td>" + a.name + "</td><td>" + (a.kind === "d" ? "직접 배출량" : "간접 배출량") + '</td><td class="r num ' + (a.v < 0 ? "neg" : "") + '">' + (a.v === 0 ? "0" : D.signed(a.v, 3)) + '</td><td class="r num">' + (a.v > 0 ? D.pct(a.v / posSum * 100) : a.v < 0 ? '<span class="neg">차감</span>' : "–") + "</td></tr>";
+      }).join("");
+      var palette = ["#0b5f5a", "#147a73", "#2a9a8f", "#5bb8a9", "#e2a43a", "#f0c46c", "#94a3b8", "#cbd5e1"];
+      donut.data.labels = pos.map(function (a) { return a.name; });
+      donut.data.datasets[0].data = pos.map(function (a) { return a.v; });
+      donut.data.datasets[0].backgroundColor = pos.map(function (a, i) { return a.kind === "i" ? ["#e2a43a", "#f0c46c", "#f6dca3"][i % 3] : palette[i % 4]; });
+      donut.update();
+    };
+
+    // ---- 동적 갱신 (원천 데이터의 소폭 변동을 시뮬레이션) ----
+    var tick = function (manual) {
+      if (state.mode !== "dynamic") { render(true); return; }
+      proj().procs.forEach(function (pr) { pr.acts.forEach(function (a) { a.dyn = D.jitter(a.dyn, .006); }); pr.dynProd = D.jitter(pr.dynProd, .002); });
+      pushHist(calc(proj(), "dynamic"));
+      state.left = REFRESH_SEC;
+      render(true);
+      if (manual) D.toast("최신 데이터로 SEE를 재계산했습니다");
+    };
+    var startTimer = function () {
+      clearInterval(state.timer);
+      if (state.mode !== "dynamic") return;
+      state.timer = setInterval(function () {
+        state.left--;
+        var l = $("#left"); if (l) l.textContent = state.left;
+        if (state.left <= 0) tick(false);
+      }, 1000);
+    };
+
+    // ---- 이벤트 ----
+    $("#projSel").innerHTML = PROJECTS.map(function (p) { return '<option value="' + p.id + '">' + p.name + "</option>"; }).join("");
+    var switchProj = function (id) { state.pid = id; state.proc = 0; D.store.set("cbam.pid", id); $("#projSel").value = id; if (state.mode === "dynamic" && !D.store.get(histKey(), []).length) pushHist(calc(proj(), "dynamic")); render(true); };
+    $("#projSel").addEventListener("change", function (e) { switchProj(e.target.value); });
+    $("#peers").addEventListener("click", function (e) { var b = e.target.closest("[data-pid]"); if (b) switchProj(b.getAttribute("data-pid")); });
+    $("#procBody").addEventListener("click", function (e) { var tr = e.target.closest("tr[data-i]"); if (tr) { state.proc = +tr.getAttribute("data-i"); render(); } });
+    $("#refreshBtn").addEventListener("click", function () {
+      var b = this; b.disabled = true; b.innerHTML = '<span class="spin">↻</span> 조회 중';
+      setTimeout(function () { b.disabled = false; b.innerHTML = "↻ 새로고침"; tick(true); }, 600);
+    });
+    $("#modeBtn").addEventListener("click", function () {
+      state.mode = state.mode === "dynamic" ? "static" : "dynamic"; D.store.set("cbam.mode", state.mode); state.left = REFRESH_SEC;
+      if (state.mode === "dynamic") pushHist(calc(proj(), "dynamic"));
+      D.toast(state.mode === "dynamic" ? "동적모드: " + REFRESH_SEC + "초마다 재계산합니다" : "정적모드: 저장된 값을 표시합니다");
+      render(true); startTimer();
+    });
+    $("#clearHist").addEventListener("click", function (e) { e.preventDefault(); D.store.set(histKey(), []); render(); });
+
+    $("#projSel").value = proj().id; state.pid = proj().id;
+    if (state.mode === "dynamic") pushHist(calc(proj(), "dynamic"));
+    render(); startTimer();
+  })();
+  </script>
+</body>
+</html>

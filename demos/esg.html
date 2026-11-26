@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ESG insight · 협력사 ESG 진단 현황 (Demo)</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <link rel="stylesheet" href="assets/demo.css" />
+  <style>
+    :root { --accent: #1f7ae0; --accent-soft: #e8f2ff; --green: #22a06b; --orange: #f2620f; }
+    .logout { background: none; color: var(--ink); font-size: 13px; }
+    .kpi { padding: 22px 24px; }
+    .kpi .lbl { font-size: 16px; color: var(--ink); font-weight: 700; }
+    .kpi .val { font-size: 32px; }
+    .kpi .val.o { color: var(--orange); } .kpi .val.g { color: var(--green); }
+    .prog { height: 8px; background: #edf0f4; border-radius: 4px; overflow: hidden; margin-top: 6px; }
+    .prog i { display: block; height: 100%; background: var(--accent); border-radius: 4px; transition: width .6s; }
+    .note { color: #e11d48; font-size: 12px; font-weight: 600; }
+    .radar-wrap { display: grid; grid-template-columns: 1fr 300px; gap: 10px; align-items: center; border: 1px solid var(--line); border-radius: 10px; padding: 10px; }
+    .lgd { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+    .lgd li { display: flex; gap: 8px; align-items: center; font-size: 12px; cursor: pointer; padding: 4px 6px; border-radius: 6px; }
+    .lgd li:hover { background: #f5f7fa; } .lgd li.off { opacity: .35; }
+    .lgd i { width: 12px; height: 12px; border: 2px solid; flex: none; }
+    .risk td { text-align: center; } .risk td:first-child { font-weight: 600; }
+    .risk .badge { margin: 2px; }
+    .vendor .pbar { height: 6px; border-radius: 3px; background: #edf0f4; overflow: hidden; min-width: 90px; }
+    .vendor .pbar i { display: block; height: 100%; }
+    .grade { display: inline-block; width: 26px; text-align: center; border-radius: 5px; font-weight: 800; color: #fff; padding: 1px 0; }
+    .grade.A { background: #16a34a; } .grade.B { background: #2563eb; } .grade.C { background: #f59e0b; } .grade.D { background: #dc2626; } .grade.X { background: #cbd5e1; }
+    @media (max-width: 1100px) { .radar-wrap { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <button class="burger" type="button" aria-label="메뉴 접기">☰</button>
+    <div class="brand"><svg class="brand-mark" viewBox="0 0 26 26"><rect x="3" y="5" width="18" height="4" rx="2" fill="#1f7ae0"/><rect x="3" y="11" width="12" height="4" rx="2" fill="#22a06b"/><rect x="3" y="17" width="7" height="4" rx="2" fill="#1f7ae0"/><circle cx="20" cy="19" r="3" fill="#22a06b"/></svg>ESG.INSIGHT</div>
+    <div class="top-r">
+      <span class="demo-note">샘플 데이터 데모</span>
+      <span class="who">관리자 님</span>
+      <button class="ico-btn" type="button" data-demo-only="설정은 데모에서 제공되지 않습니다">⚙</button>
+      <div class="ecolink"><button type="button">ECO LINK <i>↗</i></button></div>
+      <button class="logout" type="button" data-demo-only="데모 화면입니다">LOGOUT</button>
+    </div>
+  </header>
+  <div class="shell">
+    <nav class="side dark">
+      <div class="side-grp"><b>DashBoard</b><a href="#" class="on">대시보드</a></div>
+      <div class="side-grp"><b>업체관리</b><a href="#">협력업체/검증기관 관리</a></div>
+      <div class="side-grp"><b>ESG 설문템플릿</b><a href="#">카테고리 관리</a><a href="#">설문양식 설정</a></div>
+      <div class="side-grp"><b>설문등록 리스트</b><a href="#">설문등록 리스트</a></div>
+      <div class="side-grp"><b>권한변경</b><a href="#">기업</a><a href="#">협력</a><a href="#">검증</a></div>
+    </nav>
+    <main class="main">
+      <div class="row g4" id="kpis"></div>
+
+      <div class="row" style="grid-template-columns:1.6fr 1fr;margin-top:14px">
+        <section class="card">
+          <div class="card-h"><h3>협력사별 설문 진도 현황 <span class="note">※ 가장 최근에 시작된 설문 5개가 나타납니다.</span></h3><div class="ctl" style="flex-direction:row;align-items:center;gap:8px"><label for="kind" style="font-weight:800;color:var(--ink)">설문종류</label><select class="sel" id="kind"><option value="ESG">ESG</option><option value="ENV">환경 심화</option><option value="SOC">공급망 인권</option></select></div></div>
+          <div class="radar-wrap"><div style="height:290px"><canvas id="radar"></canvas></div><ul class="lgd" id="lgd"></ul></div>
+        </section>
+        <section class="card">
+          <div class="card-h"><h3>지연 및 리스크 업체</h3><span class="hint" id="riskCnt"></span></div>
+          <div class="tbl-wrap" style="max-height:330px"><table class="tbl risk"><thead><tr><th class="c">업체명</th><th class="c">상태</th></tr></thead><tbody id="risk"></tbody></table></div>
+        </section>
+      </div>
+
+      <div class="row g2">
+        <section class="card"><div class="card-h"><h3>최종 ESG 등급 분포</h3><span class="hint">점을 누르면 업체 목록에서 강조됩니다</span></div><div style="height:280px"><canvas id="scatter"></canvas></div></section>
+        <section class="card"><div class="card-h"><h3>월별 진단 완료 추이</h3><span class="hint" id="trendHint"></span></div><div style="height:280px"><canvas id="trend"></canvas></div></section>
+      </div>
+
+      <section class="card vendor">
+        <div class="card-h"><h3>협력사 진단 현황 <span class="badge" id="vCnt">0</span></h3><div style="display:flex;gap:8px;flex-wrap:wrap"><input class="inp" id="q" placeholder="업체명 검색" style="width:200px" /><select class="sel" id="fSt"><option value="">전체 상태</option><option>작성 중</option><option>검증요청 중</option><option>보완 중</option><option>최종 승인</option></select></div></div>
+        <div class="tbl-wrap" style="max-height:360px"><table class="tbl"><thead><tr><th>업체명</th><th>설문</th><th style="width:22%">진도율</th><th class="r">환경</th><th class="r">사회</th><th class="r">지배구조</th><th class="r">정보공시</th><th class="c">등급</th><th class="c">상태</th><th class="c">처리</th></tr></thead><tbody id="vendors"></tbody></table></div>
+      </section>
+    </main>
+  </div>
+  <footer class="foot"><span>Portfolio demo · <b>ESG insight</b> 화면을 일반화한 샘플 데이터로 재구성</span><span>dev-han.github.io</span></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="assets/demo.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    var D = Demo, $ = D.$, fmt = D.fmt;
+    D.init("esg");
+    var AREAS = ["정보공시", "환경", "사회", "지배구조"];
+    var NAMES = ["가람정밀", "나래산업", "다온테크", "라온소재", "마루화학", "바른금속", "새봄물산", "아라전자", "자람기계", "차오름", "카이로직스", "타라플라스틱", "파랑모터", "하늘섬유", "한빛도장", "누리부품", "다솜포장", "미르케미칼", "보람열처리", "솔빛코팅", "온새미로", "윤슬기공", "이음물류", "초록에너지", "큰별단조", "토담주조", "푸른용접", "해든표면", "그린벨트", "단비정공", "로운계측", "별하소재"];
+    var SURVEYS = { ESG: "K-ESG 진단 1.0", ENV: "환경경영 심화진단 1.1", SOC: "공급망 인권실사 1.0" };
+    var ST = ["작성 중", "검증요청 중", "보완 중", "최종 승인"];
+    var r = D.rand(77);
+    var V = NAMES.map(function (n, i) {
+      var p = Math.round(10 + r() * 90), st = p === 100 || r() < .5 ? (r() < .6 ? "최종 승인" : "검증요청 중") : r() < .25 ? "보완 중" : "작성 중";
+      if (st === "최종 승인" || st === "검증요청 중") p = 100;
+      var sc = AREAS.map(function () { return Math.round(30 + r() * 65); });
+      return { name: n, kind: ["ESG", "ENV", "SOC"][i % 3 === 2 ? Math.floor(r() * 3) : 0], prog: p, st: st, scores: sc, round: st === "보완 중" ? 1 + Math.floor(r() * 3) : 0, start: new Date(2026, Math.floor(r() * 11), 1 + Math.floor(r() * 27)), doneMonth: st === "최종 승인" ? Math.floor(r() * 11) : null };
+    });
+    var saved = D.store.get("esg.st", {});
+    V.forEach(function (v) { if (saved[v.name]) { v.st = saved[v.name]; v.prog = 100; if (v.st === "최종 승인" && v.doneMonth === null) v.doneMonth = 10; } });
+    var avg = function (v) { return v.scores.reduce(function (a, b) { return a + b; }, 0) / v.scores.length; };
+    var gradeOf = function (v) { if (v.st !== "최종 승인") return "X"; var s = avg(v); return s >= 80 ? "A" : s >= 65 ? "B" : s >= 50 ? "C" : "D"; };
+    var S = { kind: "ESG", off: {}, q: "", fst: "", hl: null };
+    var COLORS = ["#2b3fa8", "#14866d", "#22a06b", "#f2620f", "#8b5cf6"];
+
+    var radar = new Chart($("#radar"), { type: "radar", data: { labels: AREAS, datasets: [] },
+      options: { plugins: { legend: { display: false } }, scales: { r: { min: 0, max: 100, ticks: { display: false, stepSize: 20 }, pointLabels: { font: { size: 12, weight: "700" }, color: "#1f2430" } } } } });
+    var scatter = new Chart($("#scatter"), { type: "scatter", data: { datasets: [] },
+      options: { plugins: { legend: { position: "bottom" }, tooltip: { callbacks: { label: function (c) { return c.raw.n + " · " + fmt(c.raw.y, 1) + "점 · 진도 " + c.raw.p + "%"; } } } },
+        scales: { x: { min: 0, max: 33, ticks: { display: false }, grid: { display: false }, title: { display: true, text: "협력사 (32개사)" } }, y: { min: 0, max: 100, title: { display: true, text: "진단 점수" } } },
+        onClick: function (e, els) { if (!els.length) return; S.hl = scatter.data.datasets[els[0].datasetIndex].data[els[0].index].n; S.q = ""; $("#q").value = ""; renderVendors(); var tr = $('#vendors tr[data-n="' + S.hl + '"]'); if (tr) tr.scrollIntoView({ behavior: "smooth", block: "center" }); } } });
+    var trend = new Chart($("#trend"), { type: "line", data: { labels: Array.from({ length: 12 }, function (_, i) { return i + 1 + "월"; }), datasets: [
+      { label: "월별 완료", data: [], borderColor: "#1f7ae0", backgroundColor: "rgba(31,122,224,.12)", fill: true, tension: .3, pointRadius: 4, pointBackgroundColor: "#fff", pointBorderWidth: 2 },
+      { label: "누적 완료", data: [], borderColor: "#22a06b", borderDash: [5, 4], pointRadius: 0, tension: .3 }] },
+      options: { plugins: { legend: { position: "bottom" } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } }, x: { grid: { display: false } } } } });
+
+    var render = function () {
+      var wait = V.filter(function (v) { return v.st === "검증요청 중"; }).length, ok = V.filter(function (v) { return v.st === "최종 승인"; }).length;
+      var ap = V.reduce(function (s, v) { return s + v.prog; }, 0) / V.length;
+      $("#kpis").innerHTML =
+        '<div class="card kpi"><div class="lbl">진행 업체</div><div class="val num">' + V.length + '<small>개사</small></div></div>' +
+        '<div class="card kpi"><div class="lbl">평균 진도율</div><div class="val num">' + fmt(ap, 4) + '<small>%</small></div><div class="prog"><i style="width:' + ap + '%"></i></div></div>' +
+        '<div class="card kpi"><div class="lbl">검증 대기</div><div class="val num o">' + wait + '<small>건</small></div></div>' +
+        '<div class="card kpi"><div class="lbl">최종 승인</div><div class="val num g">' + ok + '<small>건</small></div></div>';
+
+      // 레이더: 선택한 설문 종류에서 가장 최근 시작된 5개
+      var recent = V.filter(function (v) { return v.kind === S.kind || S.kind === "ESG"; }).sort(function (a, b) { return b.start - a.start; }).slice(0, 5);
+      radar.data.datasets = recent.map(function (v, i) {
+        var c = COLORS[i];
+        return { label: v.name + " - " + SURVEYS[S.kind], data: v.scores.map(function (s) { return S.kind === "ESG" ? s : Math.min(100, s * (S.kind === "ENV" ? .9 : 1.05)); }), borderColor: c, backgroundColor: c + "18", pointBackgroundColor: c, borderWidth: 2, hidden: !!S.off[v.name] };
+      });
+      radar.update();
+      $("#lgd").innerHTML = recent.map(function (v, i) { return '<li data-n="' + v.name + '" class="' + (S.off[v.name] ? "off" : "") + '"><i style="border-color:' + COLORS[i] + '"></i>' + v.name + " - " + SURVEYS[S.kind] + "</li>"; }).join("");
+
+      // 리스크
+      var risk = V.filter(function (v) { return v.st === "보완 중" || (v.st === "작성 중" && v.prog < 30); });
+      $("#riskCnt").textContent = risk.length + "개 업체";
+      $("#risk").innerHTML = risk.map(function (v) {
+        return "<tr><td>" + v.name + "</td><td>" + (v.st === "보완 중" ? '<span class="badge bad">' + v.round + '회 보완 중</span><span class="badge">검증요청 중</span>' : '<span class="badge warn">지연 · 진도 ' + v.prog + "%</span>") + "</td></tr>";
+      }).join("") || '<tr><td colspan="2" class="empty">리스크 업체가 없습니다</td></tr>';
+
+      // 등급 분포
+      var groups = { A: [], B: [], C: [], D: [], X: [] };
+      V.forEach(function (v, i) { groups[gradeOf(v)].push({ x: i + 1, y: avg(v), n: v.name, p: v.prog }); });
+      var gc = { A: "#16a34a", B: "#2563eb", C: "#f59e0b", D: "#dc2626", X: "#cbd5e1" };
+      scatter.data.datasets = Object.keys(groups).map(function (g) { return { label: g === "X" ? "미확정" : g + " 등급", data: groups[g], backgroundColor: gc[g], pointRadius: 7, pointHoverRadius: 10 }; });
+      scatter.update();
+
+      // 월별 완료
+      var mon = Array(12).fill(0); V.forEach(function (v) { if (v.doneMonth !== null) mon[v.doneMonth]++; });
+      var cum = 0;
+      trend.data.datasets[0].data = mon.map(function (x, i) { return i > 10 ? null : x; });
+      trend.data.datasets[1].data = mon.map(function (x, i) { cum += x; return i > 10 ? null : cum; });
+      trend.update(); $("#trendHint").textContent = "2026년 누적 " + cum + "건";
+      renderVendors();
+    };
+
+    var renderVendors = function () {
+      var q = S.q.trim();
+      var list = V.filter(function (v) { return (!q || v.name.indexOf(q) >= 0) && (!S.fst || v.st === S.fst); }).sort(function (a, b) { return b.prog - a.prog; });
+      $("#vCnt").textContent = list.length + "개사";
+      $("#vendors").innerHTML = list.map(function (v) {
+        var g = gradeOf(v), col = v.prog === 100 ? "#22a06b" : v.prog < 30 ? "#f2620f" : "#1f7ae0";
+        var action = v.st === "검증요청 중" ? '<button class="btn" data-act="approve" data-n="' + v.name + '" style="height:28px">승인</button> <button class="btn" data-act="reject" data-n="' + v.name + '" style="height:28px">보완 요청</button>'
+          : v.st === "보완 중" ? '<button class="btn" data-act="resubmit" data-n="' + v.name + '" style="height:28px">재제출</button>' : v.st === "작성 중" ? '<button class="btn" data-act="remind" data-n="' + v.name + '" style="height:28px">독려</button>' : "–";
+        return '<tr data-n="' + v.name + '" class="' + (S.hl === v.name ? "sel" : "") + '"><td><b>' + v.name + "</b></td><td>" + SURVEYS[v.kind] + '</td><td><div style="display:flex;align-items:center;gap:8px"><div class="pbar" style="flex:1"><i style="width:' + v.prog + "%;background:" + col + '"></i></div><span class="num">' + v.prog + "%</span></div></td>" +
+          [1, 2, 3, 0].map(function (i) { return '<td class="r num">' + v.scores[i] + "</td>"; }).join("") + '<td class="c"><span class="grade ' + g + '">' + (g === "X" ? "–" : g) + '</span></td><td class="c"><span class="badge ' + (v.st === "최종 승인" ? "ok" : v.st === "보완 중" ? "bad" : v.st === "검증요청 중" ? "" : "gray") + '">' + v.st + '</span></td><td class="c">' + action + "</td></tr>";
+      }).join("") || '<tr><td colspan="10" class="empty">검색 결과가 없습니다</td></tr>';
+    };
+
+    $("#kind").addEventListener("change", function (e) { S.kind = e.target.value; S.off = {}; render(); });
+    $("#lgd").addEventListener("click", function (e) { var li = e.target.closest("li[data-n]"); if (!li) return; var n = li.getAttribute("data-n"); S.off[n] = !S.off[n]; render(); });
+    $("#q").addEventListener("input", function (e) { S.q = e.target.value; S.hl = null; renderVendors(); });
+    $("#fSt").addEventListener("change", function (e) { S.fst = e.target.value; renderVendors(); });
+    $("#vendors").addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-act]"); if (!b) return;
+      var v = V.filter(function (x) { return x.name === b.getAttribute("data-n"); })[0], act = b.getAttribute("data-act");
+      if (act === "remind") { D.toast(v.name + "에 작성 독려 알림을 보냈습니다 (데모)"); return; }
+      if (act === "approve") { v.st = "최종 승인"; v.doneMonth = 10; D.toast(v.name + " 최종 승인 · " + gradeOf(v) + " 등급"); }
+      if (act === "reject") { v.st = "보완 중"; v.round = (v.round || 0) + 1; D.toast(v.name + "에 " + v.round + "회차 보완을 요청했습니다"); }
+      if (act === "resubmit") { v.st = "검증요청 중"; D.toast(v.name + " 보완본이 재제출되었습니다"); }
+      saved[v.name] = v.st; D.store.set("esg.st", saved); render();
+    });
+    render();
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>data insight · 통합 데이터 대시보드 (Demo)</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <link rel="stylesheet" href="assets/demo.css" />
+  <style>
+    :root { --accent: #2f5bea; --accent-soft: #eaf0ff; --navy: #1e3a8a; }
+    .filter { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+    .filter .ttl { display: flex; align-items: center; gap: 12px; padding-right: 18px; border-right: 1px solid var(--line); }
+    .filter .ttl i { width: 38px; height: 38px; border-radius: 9px; background: var(--accent); color: #fff; display: grid; place-items: center; font-style: normal; font-size: 18px; }
+    .filter .ttl b { display: block; font-size: 16px; } .filter .ttl small { color: var(--sub); font-size: 11px; }
+    .filter .f { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 12.5px; }
+    .filter .f .sel { min-width: 100px; }
+    .filter .r { margin-left: auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .pill { display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 999px; background: #ecfdf3; color: #15803d; font-weight: 700; font-size: 12px; border: 1px solid #bbf7d0; }
+    .pill.off { background: #f3f4f6; color: #6b7280; border-color: #e5e7eb; }
+    .pipe { display: grid; grid-template-columns: 1fr 120px 1fr; gap: 0; align-items: center; }
+    .src { display: grid; gap: 10px; }
+    .src > div { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--line); border-left: 4px solid var(--navy); border-radius: 8px; }
+    .src > div:nth-child(2) { border-left-color: #3b82f6; } .src > div:nth-child(3) { border-left-color: #10b981; }
+    .src .ic { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line); display: grid; place-items: center; font-size: 16px; }
+    .src b { display: block; font-size: 13px; } .src small { color: var(--muted); font-size: 11px; }
+    .src .cnt { margin-left: auto; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--line); font-weight: 800; color: var(--navy); font-size: 12px; white-space: nowrap; }
+    .src .cnt.on { background: var(--accent-soft); border-color: #c7d6ff; }
+    .flow svg { width: 100%; height: 190px; display: block; }
+    .flow path { stroke: #19a7a0; stroke-width: 2; fill: none; stroke-dasharray: 5 5; animation: dash 1s linear infinite; }
+    .flow.idle path { stroke: #cbd5e1; animation: none; }
+    @keyframes dash { to { stroke-dashoffset: -10; } }
+    .hub { border: 1px solid #c7d6ff; border-radius: 12px; padding: 16px 18px; background: linear-gradient(180deg, #f8faff, #fff); }
+    .hub-h { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .hub-h .brand { font-size: 18px; }
+    .hub-h .badge { background: var(--navy); color: #fff; }
+    .hub p { color: var(--sub); font-size: 12px; margin: 10px 0 12px; }
+    .links { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+    .links small { color: var(--sub); font-size: 11px; }
+    .links div { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .links a { border: 1px solid #c7d6ff; color: var(--accent); background: #fff; padding: 5px 10px; border-radius: 6px; font-weight: 700; font-size: 12px; }
+    .links a:hover { background: var(--accent-soft); }
+    .active-list { margin-top: 14px; border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; background: #fafbfd; }
+    .active-list .h { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; gap: 10px; flex-wrap: wrap; }
+    .active-list .h small { color: var(--muted); font-weight: 400; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .chips span { font-size: 11.5px; padding: 3px 9px; border-radius: 6px; background: #fff; border: 1px solid var(--line); }
+    .chips span b { color: var(--accent); margin-right: 4px; }
+    .kpi .ic { width: 32px; height: 32px; border-radius: 8px; background: #eef6f3; display: grid; place-items: center; font-size: 15px; }
+    .kpi .val.blue { color: var(--accent); }
+    .tabs { display: flex; gap: 6px; }
+    .tabs button { border: 1px solid var(--line); background: #fff; border-radius: 6px; padding: 5px 12px; cursor: pointer; font-weight: 700; font-size: 12px; color: var(--sub); }
+    .tabs button.on { background: var(--navy); color: #fff; border-color: var(--navy); }
+    .info { font-size: 12px; color: var(--sub); margin: 0 0 10px; }
+    .tg { border: 0; background: none; cursor: pointer; color: var(--sub); width: 18px; padding: 0; }
+    .subrow td { background: #fafbfd; color: var(--sub); font-size: 12px; }
+    .subrow td:nth-child(2) { padding-left: 34px; }
+    .cat { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 5px; background: #e8f0ff; color: var(--accent); }
+    .cat.m { background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; } .cat.u { background: #ecfdf5; color: #047857; }
+    .blue { color: var(--accent); font-weight: 700; } .green { color: #059669; }
+    .chart-box { height: 270px; }
+    #procCard .tbl th, #procCard .tbl td { padding: 9px 7px; }
+    #procCard .tbl td:nth-child(2) { white-space: normal; min-width: 130px; }
+    .grp { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 12px; }
+    .grp-h { display: flex; justify-content: space-between; align-items: center; font-weight: 800; margin-bottom: 8px; }
+    .grp-h label { font-weight: 600; font-size: 12px; color: var(--sub); display: flex; gap: 6px; align-items: center; }
+    .opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px; }
+    .opts label { display: flex; gap: 8px; align-items: center; font-size: 12.5px; padding: 6px 8px; border-radius: 6px; cursor: pointer; }
+    .opts label:hover { background: #f5f7fb; }
+    .collapsed-pipe .pipe-body { display: none; }
+    @media (max-width: 1100px) { .pipe { grid-template-columns: 1fr; } .flow { display: none; } .pipe .hub { margin-top: 12px; } }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <button class="burger" type="button" aria-label="메뉴 접기">☰</button>
+    <div class="brand"><svg class="brand-mark" viewBox="0 0 26 26"><path d="M3 15 13 3h10L13 15z" fill="#2f5bea"/><path d="M3 23 13 11h10L13 23z" fill="#7ea2ff"/></svg>data insight</div>
+    <div class="top-r">
+      <span class="demo-note">샘플 데이터 데모</span>
+      <span class="who">관리자 님</span>
+      <button class="ico-btn" type="button" data-demo-only="설정은 데모에서 제공되지 않습니다">⚙</button>
+      <div class="ecolink"><button type="button">ECO LINK <i>↗</i></button></div>
+      <button class="logout" type="button" data-demo-only="데모 화면입니다">LOGOUT</button>
+    </div>
+  </header>
+  <div class="shell">
+    <nav class="side">
+      <div class="side-grp"><b>조직정보</b><a href="#">조직정보등록</a></div>
+      <div class="side-grp"><b>고객 및 공급업체</b><a href="#">고객 및 공급업체 등록</a></div>
+      <div class="side-grp"><b>품목 관리</b><a href="#">품목 관리</a><a href="#">BOS 관리</a><a href="#">BOM 관리</a></div>
+      <div class="side-grp"><b>사업장정보</b><a href="#" class="on">통합 대시보드</a><a href="#">사업장 리스트</a><a href="#">데이터 연동 관리</a></div>
+      <div class="side-grp"><b>제조공정 데이터</b><a href="#">년도 별 제조 공정 데이터</a></div>
+      <div class="side-grp"><b>유틸리티 시설 데이터</b><a href="#">년도 별 유틸리티 시설 데이터</a></div>
+    </nav>
+    <main class="main">
+      <section class="card filter">
+        <div class="ttl"><i>▥</i><div><b>통합 데이터 대시보드</b><small>샘플기업 (<span id="yLbl">2026</span>년 기준)</small></div></div>
+        <div class="f">기준 년도 <select class="sel" id="year"><option>2026</option><option>2025</option></select></div>
+        <span class="badge">🔒 사업장 귀속 년도</span>
+        <div class="f">조회 사업장 <select class="sel" id="site" style="min-width:150px"><option value="H_1">H_1 (본사 공장)</option><option value="H_2">H_2 (제2공장)</option><option value="H_3" selected>H_3 (제3공장)</option></select></div>
+        <div class="f">조회 기준 <select class="sel" id="month"></select></div>
+        <div class="r">
+          <div class="f">⏱ 동기화 주기 <select class="sel" id="cycle" style="min-width:86px"><option value="5">5초</option><option value="10">10초</option><option value="30">30초</option><option value="0">끄기</option></select></div>
+          <span class="pill" id="syncPill"><span class="pulse"></span><span id="syncTxt">-</span></span>
+          <button class="btn pri" id="syncBtn" type="button">↻ 데이터 동기화</button>
+        </div>
+      </section>
+
+      <section class="card" id="pipeCard">
+        <div class="card-h">
+          <h3>⇄ <span id="pipeTitle">-</span> 데이터 연동 파이프라인 현황 <span class="badge" id="ifBadge">-</span></h3>
+          <div style="display:flex;gap:8px;"><button class="btn" id="foldBtn" type="button">⌃ 파이프라인 접기</button><button class="btn" id="cfgBtn" type="button" style="color:var(--accent);border-color:#c7d6ff">⚙ 데이터 연동 설정 관리</button></div>
+        </div>
+        <div class="pipe-body">
+          <div class="pipe">
+            <div class="src" id="src"></div>
+            <div class="flow" id="flow"><svg viewBox="0 0 120 190" preserveAspectRatio="none"><path d="M0 30 C60 30 60 95 120 95"/><path d="M0 95 L120 95"/><path d="M0 160 C60 160 60 95 120 95"/></svg></div>
+            <div class="hub">
+              <div class="hub-h"><div class="brand"><svg class="brand-mark" viewBox="0 0 26 26"><path d="M3 15 13 3h10L13 15z" fill="#2f5bea"/><path d="M3 23 13 11h10L13 23z" fill="#7ea2ff"/></svg>data insight</div><span class="badge" id="hubCnt">-</span></div>
+              <p>수집 · 가공된 사업장 공정별 생산량 및 에너지(전력 · 연료 · 유틸리티) 실적은 아래 연결된 산출 솔루션의 기준 데이터로 활용됩니다.</p>
+              <div class="links"><small>✎ ECO LINK 산출 솔루션 바로가기</small><div><a href="cbam.html">↗ CBAM-Insight</a><a href="eco.html">↗ ECO-Insight</a><a href="esg.html">↗ ESG-Insight</a><a href="audit.html">↗ Audit-Insight</a></div></div>
+            </div>
+          </div>
+          <div class="active-list"><div class="h"><span>✅ 현재 사업장 활성 인터페이스 항목 목록</span><small>데이터 연동 관리에서 설정된 실제 항목입니다.</small></div><div id="activeList"></div></div>
+        </div>
+      </section>
+
+      <div class="row g4" id="kpis"></div>
+
+      <div class="row g2">
+        <section class="card" id="procCard">
+          <div class="card-h"><h3>공정 · 세부공정별 생산수량 및 전력 사용량 현황</h3><div class="tabs" id="tabs"><button class="on" data-t="all">전체</button><button data-t="prod">제조/생산 공정</button><button data-t="util">유틸리티/방지시설</button></div></div>
+          <p class="info">⚡ 전력은 <b>사업장/단독 계측기 단위</b>로 관리됩니다. 생산공정의 안분 전력량 = 사업장 계측 전력 × 공정 생산수량 비중</p>
+          <div class="tbl-wrap"><table class="tbl"><thead><tr><th>분류</th><th>공정 / 계측 대상</th><th class="r">생산수량</th><th class="r">계측 전력량</th><th class="r">안분 전력량</th></tr></thead><tbody id="procBody"></tbody></table></div>
+        </section>
+        <section class="card">
+          <div class="card-h"><h3>📈 <span id="chartTitle">-</span></h3><span class="hint">막대를 누르면 해당 월로 조회</span></div>
+          <div class="chart-box"><canvas id="trend"></canvas></div>
+          <div class="card-h" style="margin:18px 0 8px;"><h3 style="font-size:13.5px">사업장 품목별 생산수량 및 단위중량 현황</h3><span class="hint" id="itemCnt"></span></div>
+          <div class="tbl-wrap" style="max-height:230px"><table class="tbl"><thead><tr><th>품목명 (제품/반제품)</th><th>소속 공정</th><th class="r">단위중량</th><th class="r">조회기간 생산수량</th><th class="r">환산중량 (kg)</th></tr></thead><tbody id="itemBody"></tbody></table></div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <footer class="foot"><span>Portfolio demo · <b>data insight</b> 화면을 일반화한 샘플 데이터로 재구성</span><span>dev-han.github.io</span></footer>
+
+  <div class="modal" id="cfgModal" role="dialog" aria-modal="true" aria-label="데이터 연동 설정">
+    <div class="modal-box">
+      <div class="modal-h"><h3>⚙ 데이터 연동 설정 관리 · <span id="cfgSite"></span></h3><button class="x" data-close type="button">×</button></div>
+      <div class="modal-b" id="cfgBody"></div>
+      <div class="modal-f"><button class="btn" data-close type="button">취소</button><button class="btn pri" id="cfgSave" type="button">저장</button></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="assets/demo.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    var D = Demo, $ = D.$, fmt = D.fmt;
+    D.init("data");
+
+    // ---- 인터페이스 정의 ----
+    var IF = [
+      { key: "erp", name: "기준 / 마스터 데이터 (ERP)", desc: "사업장, 건물, 제품, 원부자재, 고객 및 공급업체", ic: "🏭", items: ["사업장", "건물", "제품 마스터", "원부자재 마스터", "고객사", "공급업체", "단위 환산 기준"] },
+      { key: "mes", name: "사업장 공정 · 설비 · 유틸리티 마스터 (MES)", desc: "공정, 세부공정, 전력설비, 보일러, 압축기, 방지시설", ic: "⚙", items: ["공정", "세부공정", "공정 라우팅", "전력 설비", "변전 설비", "보일러", "공기압축기", "냉동기", "냉각탑", "집진기", "스크러버", "폐수처리", "LNG 설비", "스팀 라인", "계측기 마스터", "설비-공정 매핑"] },
+      { key: "iot", name: "제조공정 생산 · 에너지 계측 데이터 (MES/IoT)", desc: "제품생산량, 원자재투입, 전력·스팀·연료 계측, LOT", ic: "📡", items: ["제품 생산량", "반제품 생산량", "원자재 투입량", "부자재 투입량", "LOT 이력", "불량 수량", "한전 전력 계측", "공정별 전력 계측", "스팀 계측", "LNG 계측", "경유 사용량", "용수 사용량", "압축공기 계측", "설비 가동 시간", "폐기물 발생량", "포장재 사용량", "운송 실적"] }
+    ];
+    var TOTAL_IF = IF.reduce(function (s, g) { return s + g.items.length; }, 0);
+    var DEFAULT_CFG = { H_1: { erp: [0, 1, 2, 3, 4, 5, 6], mes: [0, 1, 2, 3, 5, 6, 9, 14], iot: [0, 1, 2, 6, 7, 9, 13] }, H_2: { erp: [0, 2, 3], mes: [0, 1, 14], iot: [0, 6] }, H_3: { erp: [], mes: [], iot: [] } };
+    var cfg = D.store.get("data.cfg", DEFAULT_CFG);
+
+    // ---- 사업장 실적 (월별) ----
+    var SITES = {
+      H_1: { base: 2.1e6, kwh: .74, fuel: .046, procs: [["모터 하우징 제조공정", ["다이캐스팅", "CNC 가공", "도장"]], ["감속기 조립공정", ["부품 세척", "조립", "검사"]]] },
+      H_2: { base: 1.4e6, kwh: .91, fuel: .062, procs: [["샤프트 단조공정", ["가열", "단조", "열처리"]]] },
+      H_3: { base: 3.3e6, kwh: .79, fuel: .054, procs: [["모터케이스 제조공정", ["주조", "가공", "표면처리"]], ["브래킷 프레스공정", ["블랭킹", "프레스", "용접"]]] }
+    };
+    var ITEMS = ["모터 케이스 반제품", "변속기 컨버터 하우징 반제품", "엔진 실린더 블록 반제품", "브래킷 A형", "브래킷 B형", "커버 플레이트", "샤프트 하우징", "마운트 브래킷", "냉각 핀 블록", "베어링 캡"];
+    var monthly = {};
+    ["H_1", "H_2", "H_3"].forEach(function (s, si) {
+      [2025, 2026].forEach(function (y) {
+        var r = D.rand(si * 31 + y), arr = [];
+        for (var m = 0; m < 12; m++) {
+          var season = 1 + .08 * Math.sin((m - 2) / 12 * 6.283) + (r() - .5) * .12;
+          var prod = SITES[s].base * season * (y === 2026 ? 1.05 : 1);
+          var kwhRatio = SITES[s].kwh * (1 + (r() - .5) * .18) * (m >= 9 && m <= 10 ? .78 : 1);
+          arr.push({ prod: prod, kwh: prod * kwhRatio, fuel: prod * SITES[s].fuel * (m < 2 || m > 10 ? 1.3 : 1) });
+        }
+        monthly[s + y] = arr;
+      });
+    });
+    var share = {};
+    ["H_1", "H_2", "H_3"].forEach(function (s, si) { var r = D.rand(si + 7), w = ITEMS.map(function () { return .3 + r(); }), t = w.reduce(function (a, b) { return a + b; }, 0); share[s] = w.map(function (x) { return x / t; }); });
+
+    var st = { year: 2026, site: "H_3", month: 10, tab: "all", open: {}, cycle: 5, left: 5, lastSync: D.now() };
+    $("#month").innerHTML = Array.from({ length: 12 }, function (_, i) { return '<option value="' + i + '">' + (i + 1) + "월 실적</option>"; }).join("");
+    $("#month").value = st.month;
+
+    var enabledCount = function (site, key) { return (cfg[site] && cfg[site][key] || []).length; };
+    var totalEnabled = function (site) { return IF.reduce(function (s, g) { return s + enabledCount(site, g.key); }, 0); };
+
+    var chart = new Chart($("#trend"), {
+      data: { labels: Array.from({ length: 12 }, function (_, i) { return i + 1 + "월"; }), datasets: [
+        { type: "line", label: "전력 사용량 (kWh)", data: [], yAxisID: "y2", borderColor: "#14a39a", backgroundColor: "#14a39a", tension: .35, pointRadius: 3, order: 0 },
+        { type: "bar", label: "생산수량 (kg)", data: [], yAxisID: "y", backgroundColor: [], borderRadius: 3, order: 1 }
+      ] },
+      options: { interaction: { mode: "index", intersect: false }, plugins: { legend: { position: "bottom" }, tooltip: { callbacks: { label: function (c) { return c.dataset.label + ": " + fmt(c.raw); } } } },
+        scales: { y: { ticks: { callback: function (v) { return fmt(v / 1000) + "k"; } }, title: { display: true, text: "생산수량 (kg)" } }, y2: { position: "right", grid: { display: false }, ticks: { callback: function (v) { return fmt(v / 1000) + "k"; } }, title: { display: true, text: "전력 (kWh)" } }, x: { grid: { display: false } } },
+        onClick: function (e, els) { if (els.length) { st.month = els[0].index; $("#month").value = st.month; render(true); } } }
+    });
+
+    var render = function (flash) {
+      var site = st.site, data = monthly[site + st.year], cur = data[st.month], en = totalEnabled(site);
+      $("#yLbl").textContent = st.year;
+      $("#pipeTitle").textContent = site + " (" + st.year + "년)";
+      var badge = $("#ifBadge"); badge.textContent = en ? "인터페이스 " + en + "개 연동 중" : "인터페이스 미설정"; badge.className = "badge " + (en ? "ok" : "");
+      $("#hubCnt").textContent = "총 " + en + " / " + TOTAL_IF + "개 항목 활성";
+      $("#flow").classList.toggle("idle", !en);
+      $("#src").innerHTML = IF.map(function (g) {
+        var n = enabledCount(site, g.key);
+        return '<div><span class="ic">' + g.ic + "</span><div><b>" + g.name + "</b><small>" + g.desc + '</small></div><span class="cnt' + (n ? " on" : "") + '">' + n + " / " + g.items.length + "개 연동</span></div>";
+      }).join("");
+      $("#activeList").innerHTML = en ? '<div class="chips">' + IF.map(function (g) { return (cfg[site][g.key] || []).map(function (i) { return "<span><b>" + g.key.toUpperCase() + "</b>" + g.items[i] + "</span>"; }).join(""); }).join("") + "</div>"
+        : '<p class="info" style="margin:10px 0 0">현재 사업장에 활성화된 인터페이스 항목이 없습니다. 우측 상단 <b>[데이터 연동 설정 관리]</b> 버튼을 눌러 연동할 항목을 선택해 주세요.</p>';
+
+      var m = st.month + 1;
+      $("#kpis").innerHTML =
+        kpi("제품 생산수량 (" + m + "월)", "📦", fmt(cur.prod), "kg", "환산중량: " + fmt(cur.prod) + " kg (" + fmt(cur.prod / 1000, 1) + " Ton · 품목 " + ITEMS.length + "종)", "품목별 생산실적 집계", "생산실적 상세 →", "#itemBody") +
+        kpi("전력 사용량 (" + m + "월)", "⚡", fmt(cur.kwh), "kWh", "환산 전력량: " + fmt(cur.kwh / 1000, 2) + " MWh", "사업장 및 공정 전력 계측", "전력실적 상세 →", "#procCard") +
+        kpi("연료 사용량 (" + m + "월)", "⛽", fmt(cur.fuel), "L", "보일러 및 가열설비 연료 실적", "투입 연료 에너지 집계", "연료실적 상세 →", "#procCard") +
+        kpi("생산수량당 전력 원단위", "📊", fmt(cur.kwh / cur.prod, 2), "kWh / kg", "단위 제품(1 kg) 생산당 전력 소비량", "공정 에너지 효율 지표", "제조공정 데이터 →", "#procCard", true);
+      if (flash) D.$$("#kpis .val").forEach(function (v) { v.classList.remove("flash"); void v.offsetWidth; v.classList.add("flash"); });
+
+      // 공정 표 (안분)
+      var P = cur.kwh, util = [["공기압축기", .09], ["보일러", .04], ["집진기 (방지시설)", .03]];
+      var prodShare = SITES[site].procs.map(function (_, i, a) { return a.length === 1 ? 1 : i === 0 ? .62 : .38; });
+      var rows = [];
+      SITES[site].procs.forEach(function (p, i) {
+        var q = cur.prod * prodShare[i], alloc = P * .84 * prodShare[i];
+        rows.push({ t: "prod", html: '<tr><td><span class="cat">생산공정</span></td><td><button class="tg" data-k="' + i + '" type="button">' + (st.open[i] ? "▾" : "▸") + "</button> " + p[0] + '</td><td class="r blue num">' + fmt(q) + ' kg</td><td class="r" style="color:var(--muted)">사업장 계측</td><td class="r green num">' + fmt(alloc) + " kWh</td></tr>" });
+        if (st.open[i]) p[1].forEach(function (sp, j) { var w = [.45, .35, .2][j]; rows.push({ t: "prod", html: '<tr class="subrow"><td></td><td>└ ' + sp + '</td><td class="r num">' + fmt(q * w) + ' kg</td><td class="r">–</td><td class="r num">' + fmt(alloc * w) + " kWh</td></tr>" }); });
+      });
+      rows.push({ t: "util", html: '<tr><td><span class="cat m">사업장계측</span></td><td>▸ 한전 전기 <small style="color:var(--muted)">(계측기)</small></td><td class="r">–</td><td class="r num"><b>' + fmt(P) + ' kWh</b></td><td class="r green num">' + fmt(P) + " kWh</td></tr>" });
+      util.forEach(function (u) { rows.push({ t: "util", html: '<tr><td><span class="cat u">유틸리티</span></td><td>' + u[0] + '</td><td class="r">–</td><td class="r num">' + fmt(P * u[1]) + ' kWh</td><td class="r green num">' + fmt(P * u[1]) + " kWh</td></tr>" }); });
+      $("#procBody").innerHTML = rows.filter(function (r) { return st.tab === "all" || r.t === st.tab; }).map(function (r) { return r.html; }).join("");
+
+      // 차트
+      $("#chartTitle").textContent = site + " 월별 생산수량 및 전력 사용량 추이 (" + st.year + "년)";
+      chart.data.datasets[1].data = data.map(function (d) { return Math.round(d.prod); });
+      chart.data.datasets[0].data = data.map(function (d) { return Math.round(d.kwh); });
+      chart.data.datasets[1].backgroundColor = data.map(function (_, i) { return i === st.month ? "#1e3a8a" : "#5b7fe8"; });
+      chart.update("none");
+
+      // 품목 표
+      $("#itemCnt").textContent = "총 " + ITEMS.length + "개 품목";
+      $("#itemBody").innerHTML = ITEMS.map(function (n, i) {
+        var q = cur.prod * share[site][i];
+        return "<tr><td><b>" + n + "</b></td><td>" + SITES[site].procs[i % SITES[site].procs.length][0] + '</td><td class="r">1 kg/kg</td><td class="r blue num">' + fmt(q) + ' kg</td><td class="r num">' + fmt(q) + " kg</td></tr>";
+      }).join("");
+      updatePill();
+    };
+    var kpi = function (lbl, ic, val, unit, meta, fl, link, target, blue) {
+      return '<div class="card kpi"><div class="lbl">' + lbl + '<span class="ic">' + ic + '</span></div><div class="val num' + (blue ? " blue" : "") + '">' + val + "<small>" + unit + '</small></div><div class="meta">' + meta + '</div><div class="foot-l"><span>' + fl + '</span><a data-go="' + target + '">' + link + "</a></div></div>";
+    };
+    var updatePill = function () {
+      var pill = $("#syncPill"), on = st.cycle > 0;
+      pill.classList.toggle("off", !on); pill.querySelector(".pulse").classList.toggle("off", !on);
+      $("#syncTxt").textContent = on ? "자동 동기화 (" + st.cycle + "초 주기 · " + st.lastSync + ")" : "자동 동기화 꺼짐 · 마지막 " + st.lastSync;
+    };
+
+    // ---- 동기화: 활성 인터페이스가 있으면 최신 월 실적이 누적되는 상황 시뮬레이션 ----
+    var sync = function (manual) {
+      st.lastSync = D.now();
+      var en = totalEnabled(st.site);
+      if (en && st.year === 2026) {
+        var d = monthly[st.site + "2026"][10], inc = 1 + Math.random() * .004 * Math.min(1, en / 12);
+        d.prod *= inc; d.kwh *= 1 + (inc - 1) * 1.1; d.fuel *= 1 + (inc - 1) * .8;
+      }
+      render(st.month === 10 && en > 0);
+      if (manual) D.toast(en ? "인터페이스 " + en + "개 항목에서 최신 실적을 수집했습니다" : "활성 인터페이스가 없어 수집할 데이터가 없습니다");
+    };
+    setInterval(function () { if (st.cycle > 0 && --st.left <= 0) { st.left = st.cycle; sync(false); } }, 1000);
+
+    // ---- 이벤트 ----
+    $("#year").addEventListener("change", function (e) { st.year = +e.target.value; render(true); });
+    $("#site").addEventListener("change", function (e) { st.site = e.target.value; st.open = {}; render(true); });
+    $("#month").addEventListener("change", function (e) { st.month = +e.target.value; render(true); });
+    $("#cycle").addEventListener("change", function (e) { st.cycle = +e.target.value; st.left = st.cycle; updatePill(); });
+    $("#syncBtn").addEventListener("click", function () {
+      var b = this; b.disabled = true; b.innerHTML = '<span class="spin">↻</span> 동기화 중';
+      setTimeout(function () { b.disabled = false; b.innerHTML = "↻ 데이터 동기화"; st.left = st.cycle; sync(true); }, 700);
+    });
+    $("#foldBtn").addEventListener("click", function () { var c = $("#pipeCard").classList.toggle("collapsed-pipe"); this.textContent = c ? "⌄ 파이프라인 펼치기" : "⌃ 파이프라인 접기"; });
+    $("#tabs").addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; st.tab = b.getAttribute("data-t"); D.$$("#tabs button").forEach(function (x) { x.classList.toggle("on", x === b); }); render(); });
+    $("#procBody").addEventListener("click", function (e) { var b = e.target.closest(".tg[data-k]"); if (b) { var k = b.getAttribute("data-k"); st.open[k] = !st.open[k]; render(); } });
+    $("#kpis").addEventListener("click", function (e) { var a = e.target.closest("[data-go]"); if (a) { var t = $(a.getAttribute("data-go")); (t.closest(".card") || t).scrollIntoView({ behavior: "smooth", block: "center" }); } });
+
+    var modal = D.modal($("#cfgModal"));
+    $("#cfgBtn").addEventListener("click", function () {
+      var c = cfg[st.site] || { erp: [], mes: [], iot: [] };
+      $("#cfgSite").textContent = st.site;
+      $("#cfgBody").innerHTML = IF.map(function (g) {
+        return '<div class="grp" data-g="' + g.key + '"><div class="grp-h"><span>' + g.ic + " " + g.name + '</span><label><input type="checkbox" class="all"> 전체 선택</label></div><div class="opts">' +
+          g.items.map(function (it, i) { return '<label><input type="checkbox" value="' + i + '"' + ((c[g.key] || []).indexOf(i) >= 0 ? " checked" : "") + "> " + it + "</label>"; }).join("") + "</div></div>";
+      }).join("");
+      D.$$("#cfgBody .grp").forEach(function (grp) {
+        var all = grp.querySelector(".all"), boxes = D.$$(".opts input", grp);
+        var sync = function () { var n = boxes.filter(function (b) { return b.checked; }).length; all.checked = n === boxes.length; all.indeterminate = n > 0 && n < boxes.length; };
+        all.addEventListener("change", function () { boxes.forEach(function (b) { b.checked = all.checked; }); });
+        boxes.forEach(function (b) { b.addEventListener("change", sync); }); sync();
+      });
+      modal.open();
+    });
+    $("#cfgSave").addEventListener("click", function () {
+      var c = {};
+      D.$$("#cfgBody .grp").forEach(function (grp) { c[grp.getAttribute("data-g")] = D.$$(".opts input:checked", grp).map(function (b) { return +b.value; }); });
+      cfg[st.site] = c; D.store.set("data.cfg", cfg); modal.close(); render(); D.toast(st.site + " 연동 설정을 저장했습니다 · " + totalEnabled(st.site) + "개 항목 활성");
+    });
+
+    render();
+  })();
+  </script>
+</body>
+</html>

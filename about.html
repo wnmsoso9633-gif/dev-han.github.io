@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="한승호 — 백엔드·풀스택 개발자 소개와 기술 스택" />
+  <meta name="theme-color" content="#0b0606" />
+  <title>About | Han Seungho</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="realm" aria-hidden="true"><canvas id="realm"></canvas></div>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <nav class="nav nav-l"><a href="index.html">Home</a><a href="about.html" class="active">About</a></nav>
+      <a href="index.html" class="logo">DEV<i>·</i>HAN</a>
+      <nav class="nav nav-r"><a href="projects.html">Projects</a><a href="demos.html">Demos</a><a href="engineering.html">Engineering</a></nav>
+      <button class="nav-toggle" type="button" aria-label="메뉴" aria-expanded="false"><span></span></button>
+    </div>
+    <nav class="menu" aria-label="모바일 메뉴"><a href="index.html">Home</a><a href="about.html" class="active">About</a><a href="projects.html">Projects</a><a href="demos.html">Demos</a><a href="engineering.html">Engineering</a></nav>
+  </header>
+
+  <main>
+    <section class="page-head">
+      <div class="container">
+        <p class="eyebrow">About</p>
+        <h1>The <em>engineer</em><br />behind the data.</h1>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:40px;">
+      <div class="container about-grid">
+        <div>
+          <p class="statement reveal">제조 현장과 <em>탄소 규제</em> 사이에서,<br />데이터가 흐르는 길을 설계합니다.</p>
+          <div class="prose reveal">
+            <p>인터페이스로 수집한 데이터가 <strong>공통기준</strong>에 모이고, PCF·CBAM·OCF가 각자의 계산 기준으로 그 데이터를 가져가 대시보드·산정·보고서로 이어지는 구조 위에서 일합니다. 그중 MES, LOT, BOM, FEMS 영역의 테이블 분석, 설계, 데이터 연결을 맡고 있습니다.</p>
+            <p>하나의 계산을 <strong>정적(저장값)과 동적(재계산값)</strong> 두 모드로 안전하게 운영하는 구조, 다중 DB 환경의 스키마 동기화처럼 <em >기존 동작은 그대로 두고 기능을 얹는</em> 작업을 좋아합니다.</p>
+            <p>컴퓨터 비전, 센서 · 무선 센서 네트워크, 생성형 AI 등 인접 분야를 꾸준히 공부하며 현업 설계에 접목할 방법을 찾습니다.</p>
+          </div>
+        </div>
+        <aside class="reveal">
+          <dl class="spec">
+            <div><dt>Role</dt><dd>Backend &amp; Full-Stack Engineer</dd></div>
+            <div><dt>Domain</dt><dd>Carbon · ESG Data Platform<br />PCF · CBAM · OCF</dd></div>
+            <div><dt>Backend</dt><dd>C# · ASP.NET · Dapper · Java · Spring</dd></div>
+            <div><dt>Database</dt><dd>MariaDB · PostgreSQL · Oracle<br />SQL 설계 · 최적화 · 스키마 동기화</dd></div>
+            <div><dt>Frontend</dt><dd>jQuery · Chart.js · JavaScript</dd></div>
+            <div><dt>Applied</dt><dd>Local LLM (Ollama) · Computer Vision</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+      <p>© <span id="year">2026</span> Han Seungho — Portfolio</p>
+      <div class="footer-links">
+        <a href="https://github.com/dev-han" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="projects.html">Projects</a>
+        <a href="demos.html">Demos</a>
+        <a href="engineering.html">Notes</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

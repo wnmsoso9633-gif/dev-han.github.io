@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>audit insight · 부적합 · 시정조치 현황 (Demo)</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  <link rel="stylesheet" href="assets/demo.css" />
+  <style>
+    :root { --accent: #2457d6; --accent-soft: #e9efff; --ma: #dc3c3c; --mi: #f0a03a; --ob: #4a7be8; --of: #a3b1bf; }
+    .top { border-bottom: 1px solid var(--line); }
+    .logout { background: none; color: var(--ink); font-size: 13px; }
+    .filters { display: flex; gap: 26px; flex-wrap: wrap; align-items: flex-end; }
+    .filters .grp3 { display: flex; gap: 8px; }
+    .filters .sel { min-width: 118px; }
+    .seg.wide button { padding: 6px 54px; }
+    .kpi .val.ma { color: var(--ma); } .kpi .val.warn { color: #d97706; }
+    .gauge { position: relative; height: 230px; }
+    .gauge-c { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; pointer-events: none; }
+    .gauge-c b { font-size: 26px; display: block; } .gauge-c small { color: var(--sub); }
+    .gauge-l { display: flex; justify-content: center; gap: 16px; font-size: 12px; color: var(--sub); margin-top: 8px; }
+    .gauge-l i { display: inline-block; width: 10px; height: 10px; margin-right: 5px; border-radius: 2px; }
+    .gr { display: inline-block; min-width: 28px; text-align: center; font-weight: 800; font-size: 11px; padding: 2px 6px; border-radius: 4px; color: #fff; }
+    .gr.MA { background: var(--ma); } .gr.MI { background: var(--mi); } .gr.OB { background: var(--ob); } .gr.OF { background: var(--of); }
+    .tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+    .tabs button { border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 4px 12px; cursor: pointer; font-weight: 700; font-size: 12px; color: var(--sub); }
+    .tabs button.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .chipf { display: inline-flex; gap: 6px; align-items: center; background: #fff7e6; color: #b45309; border-radius: 999px; padding: 3px 10px; font-size: 12px; font-weight: 700; }
+    .chipf button { border: 0; background: none; cursor: pointer; color: inherit; font-weight: 800; }
+    .over { color: var(--neg); font-weight: 700; }
+    .dl { display: grid; grid-template-columns: 120px 1fr; gap: 8px 14px; margin: 0; }
+    .dl dt { color: var(--sub); font-size: 12px; } .dl dd { margin: 0; font-weight: 600; }
+    .steps { display: flex; gap: 0; margin: 18px 0 4px; }
+    .steps span { flex: 1; text-align: center; font-size: 11.5px; padding: 8px 0; background: #eef1f6; color: var(--muted); font-weight: 700; position: relative; }
+    .steps span.on { background: var(--accent); color: #fff; }
+    .steps span.done { background: #c7d6ff; color: var(--accent); }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <button class="burger" type="button" aria-label="메뉴 접기">☰</button>
+    <div class="brand"><svg class="brand-mark" viewBox="0 0 26 26"><path d="M13 2 23 6v7c0 6-4.5 9.5-10 11C7.5 22.5 3 19 3 13V6z" fill="#2457d6"/><path d="m8 13 4 4 7-8" stroke="#fff" stroke-width="2.6" fill="none"/></svg>audit insight</div>
+    <div class="top-r">
+      <span class="demo-note">샘플 데이터 데모</span>
+      <span class="who">관리자 님</span>
+      <button class="ico-btn" type="button" data-demo-only="설정은 데모에서 제공되지 않습니다">⚙</button>
+      <div class="ecolink"><button type="button">ECO LINK <i>↗</i></button></div>
+      <button class="logout" type="button" data-demo-only="데모 화면입니다">LOGOUT</button>
+    </div>
+  </header>
+  <div class="shell">
+    <nav class="side dark">
+      <div class="side-grp"><b>Dashboard</b><a href="#" class="on">현황 대시보드</a></div>
+      <div class="side-grp"><b>Finding 협의</b><a href="#">부적합 작성</a><a href="#">부적합 진행 확정</a><a href="#">등급 확정</a></div>
+      <div class="side-grp"><b>시정요청</b><a href="#">시정요청</a><a href="#">CAR 진행</a><a href="#">CAR 결재</a><a href="#">CAR 완료</a></div>
+      <div class="side-grp"><b>Guide &amp; Verification</b><a href="#">QP 진행</a><a href="#">QP 완료</a></div>
+    </nav>
+    <main class="main">
+      <section class="card filters">
+        <div class="ctl"><label>CAR 구분</label><div class="grp3"><select class="sel" id="fType"><option value="">전체</option><option>내부심사</option><option>외부심사</option><option>고객사심사</option></select><select class="sel" id="fDept"><option value="">없음 (전 부서)</option><option>생산팀</option><option>품질팀</option><option>환경안전팀</option><option>구매팀</option></select><select class="sel" id="fGrade"><option value="">없음 (전 등급)</option><option value="MA">Major (MA)</option><option value="MI">Minor (MI)</option><option value="OB">Observation (OB)</option><option value="OF">OFI (OF)</option></select></div></div>
+        <div class="ctl"><label>조회구분</label><div class="seg wide" id="unit"><button type="button" class="on" data-u="m">월별</button><button type="button" data-u="q">분기별</button></div></div>
+        <div class="ctl"><label for="period">조회기간</label><select class="sel" id="period" style="min-width:280px"></select></div>
+      </section>
+
+      <div class="row g4" id="kpis" style="margin-top:14px"></div>
+
+      <section class="card" style="margin-top:14px">
+        <div class="card-h"><h3>부적합 사항 등급별 발생 및 대응 현황 추이</h3><span class="hint">막대를 누르면 아래 목록이 해당 기간으로 필터링됩니다 · 범례로 등급 표시 전환</span></div>
+        <div style="height:300px"><canvas id="trend"></canvas></div>
+      </section>
+
+      <div class="row g3">
+        <section class="card"><div class="card-h"><h3>시정 조치 완료율</h3><span class="hint" id="carHint"></span></div><div class="gauge"><canvas id="g1"></canvas><div class="gauge-c"><div><b id="g1v">-</b><small>완료 / 전체 CAR</small></div></div></div><div class="gauge-l"><span><i style="background:#2457d6"></i>완료</span><span><i style="background:#dfe9e9"></i>미완료</span></div></section>
+        <section class="card"><div class="card-h"><h3>통보서 회신율</h3><span class="hint" id="repHint"></span></div><div class="gauge"><canvas id="g2"></canvas><div class="gauge-c"><div><b id="g2v">-</b><small>회신 / 발송</small></div></div></div><div class="gauge-l"><span><i style="background:#4a7be8"></i>회신</span><span><i style="background:#dfe9e9"></i>미회신</span></div></section>
+        <section class="card"><div class="card-h"><h3>등급 × 진행 단계</h3><span class="hint">조회기간 기준</span></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>등급</th><th class="r">작성</th><th class="r">진행</th><th class="r">결재</th><th class="r">완료</th><th class="r">합계</th></tr></thead><tbody id="matrix"></tbody></table></div></section>
+      </div>
+
+      <section class="card">
+        <div class="card-h"><h3>부적합 목록 <span class="badge" id="listCnt">0건</span> <span id="chipf"></span></h3><div class="tabs" id="stTabs"><button class="on" data-s="">전체</button><button data-s="작성">작성</button><button data-s="진행">진행</button><button data-s="결재">결재</button><button data-s="완료">완료</button></div></div>
+        <div class="tbl-wrap" style="max-height:380px"><table class="tbl"><thead><tr><th>번호</th><th>등급</th><th>구분</th><th>부서</th><th>내용</th><th>발행일</th><th>조치기한</th><th class="c">단계</th><th class="c">통보서</th></tr></thead><tbody id="list"></tbody></table></div>
+      </section>
+    </main>
+  </div>
+  <footer class="foot"><span>Portfolio demo · <b>audit insight</b> 화면을 일반화한 샘플 데이터로 재구성</span><span>dev-han.github.io</span></footer>
+
+  <div class="modal" id="detail" role="dialog" aria-modal="true" aria-label="부적합 상세">
+    <div class="modal-box">
+      <div class="modal-h"><h3 id="dTitle">-</h3><button class="x" data-close type="button">×</button></div>
+      <div class="modal-b" id="dBody"></div>
+      <div class="modal-f"><button class="btn" data-close type="button">닫기</button><button class="btn" id="dReply" type="button">통보서 회신 등록</button><button class="btn pri" id="dNext" type="button">다음 단계로</button></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="assets/demo.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    var D = Demo, $ = D.$, fmt = D.fmt;
+    D.init("audit");
+    var GR = [["MA", "Major (MA)", "#dc3c3c"], ["MI", "Minor (MI)", "#f0a03a"], ["OB", "Observation (OB)", "#4a7be8"], ["OF", "OFI (OF)", "#a3b1bf"]];
+    var STEPS = ["작성", "진행", "결재", "완료"];
+    var TYPES = ["내부심사", "외부심사", "고객사심사"], DEPTS = ["생산팀", "품질팀", "환경안전팀", "구매팀"];
+    var TOPICS = ["작업표준서 개정 이력 누락", "계측기 교정 주기 초과", "폐기물 보관 표지 미부착", "원자재 수입검사 기록 누락", "MSDS 최신본 미비치", "교육 훈련 기록 불충분", "공정 변경 승인 절차 미준수", "배출량 산정 근거자료 미보관", "협력사 평가 주기 미준수", "부적합품 격리 구역 미구분", "에너지 계측 데이터 누락 구간", "비상대응 훈련 미실시"];
+    var END = { y: 2026, m: 6 };   // 데이터 기준 시점
+
+    // 샘플 부적합 생성 (최근 월로 갈수록 증가)
+    var r = D.rand(42), F = [], ym = function (y, m) { return y * 12 + (m - 1); };
+    for (var k = ym(2024, 7); k <= ym(END.y, END.m); k++) {
+      var age = ym(END.y, END.m) - k, n = Math.round((age > 4 ? 1 + r() * 4 : [52, 16, 2, 2, 1][age]) * (age > 4 ? 1 : 1));
+      for (var i = 0; i < n; i++) {
+        var y = Math.floor(k / 12), m = k % 12 + 1, gx = r(), grade = age === 0 ? (gx < .78 ? "MA" : gx < .9 ? "MI" : "OB") : (gx < .45 ? "MA" : gx < .75 ? "MI" : gx < .95 ? "OB" : "OF");
+        var day = 1 + Math.floor(r() * 27), stepIdx = age > 3 ? 3 : age > 0 ? Math.floor(r() * 4) : Math.floor(r() * 3);
+        if (age > 0 && r() < .6) stepIdx = 3;
+        F.push({ id: "F-" + String(y).slice(2) + String(m).padStart(2, "0") + "-" + String(i + 1).padStart(3, "0"), y: y, m: m, k: k, d: day, grade: grade,
+          type: TYPES[Math.floor(r() * 3)], dept: DEPTS[Math.floor(r() * 4)], topic: TOPICS[Math.floor(r() * TOPICS.length)], step: STEPS[stepIdx], replied: stepIdx >= 2 || r() < .55 });
+      }
+    }
+    var saved = D.store.get("audit.edits", {});
+    F.forEach(function (f) { if (saved[f.id]) { f.step = saved[f.id].step; f.replied = saved[f.id].replied; } });
+
+    var S = { unit: "m", end: ym(END.y, END.m), type: "", dept: "", grade: "", step: "", bucket: null };
+    var fillPeriod = function () {
+      var opts = [];
+      if (S.unit === "m") for (var k = ym(END.y, END.m); k >= ym(2025, 1); k--) opts.push('<option value="' + k + '">' + Math.floor(k / 12) + "년 " + (k % 12 + 1) + "월</option>");
+      else for (var q = ym(END.y, END.m); q >= ym(2025, 3); q -= 3) { var qq = Math.floor((q % 12) / 3) + 1; opts.push('<option value="' + q + '">' + Math.floor(q / 12) + "년 " + qq + "분기</option>"); }
+      $("#period").innerHTML = opts.join(""); $("#period").value = S.end = +$("#period").options[0].value;
+    };
+    var buckets = function () {
+      var out = [];
+      if (S.unit === "m") for (var k = S.end - 11; k <= S.end; k++) out.push({ from: k, to: k, label: Math.floor(k / 12) + "-" + String(k % 12 + 1).padStart(2, "0") });
+      else { var qEnd = S.end - (S.end % 3) + 2; for (var b = 7; b >= 0; b--) { var to = qEnd - b * 3; out.push({ from: to - 2, to: to, label: Math.floor(to / 12) + " Q" + (Math.floor((to % 12) / 3) + 1) }); } }
+      return out;
+    };
+    var match = function (f) { return (!S.type || f.type === S.type) && (!S.dept || f.dept === S.dept) && (!S.grade || f.grade === S.grade); };
+
+    var trend = new Chart($("#trend"), { type: "bar", data: { labels: [], datasets: GR.map(function (g) { return { label: g[1], data: [], backgroundColor: g[2], stack: "a", borderRadius: 2, maxBarThickness: 90 }; }) },
+      options: { plugins: { legend: { position: "bottom" }, tooltip: { mode: "index" } }, scales: { x: { stacked: true, grid: { color: "#eef0f4" } }, y: { stacked: true, beginAtZero: true, ticks: { precision: 0 } } },
+        onClick: function (e, els) { if (!els.length) return; var b = trend._b[els[0].index]; S.bucket = S.bucket && S.bucket.label === b.label ? null : b; renderList(); } } });
+    var gauge = function (el, color) { return new Chart(el, { type: "doughnut", data: { labels: ["완료", "미완료"], datasets: [{ data: [0, 1], backgroundColor: [color, "#dfe9e9"], borderWidth: 0 }] }, options: { cutout: "58%", rotation: 0, plugins: { legend: { display: false } } } }); };
+    var g1 = gauge($("#g1"), "#2457d6"), g2 = gauge($("#g2"), "#4a7be8");
+
+    var render = function () {
+      var bs = buckets(), from = bs[0].from, to = bs[bs.length - 1].to;
+      var inRange = F.filter(function (f) { return match(f) && f.k >= from && f.k <= to; });
+      trend._b = bs; trend.data.labels = bs.map(function (b) { return b.label; });
+      GR.forEach(function (g, gi) { trend.data.datasets[gi].data = bs.map(function (b) { return inRange.filter(function (f) { return f.grade === g[0] && f.k >= b.from && f.k <= b.to; }).length; }); });
+      trend.update();
+
+      var car = inRange.filter(function (f) { return f.grade === "MA" || f.grade === "MI"; }), done = car.filter(function (f) { return f.step === "완료"; }).length;
+      var rep = inRange.filter(function (f) { return f.replied; }).length;
+      g1.data.datasets[0].data = [done, Math.max(car.length - done, 0)]; g1.update(); $("#g1v").textContent = car.length ? D.pct(done / car.length * 100) : "-"; $("#carHint").textContent = done + " / " + car.length + "건";
+      g2.data.datasets[0].data = [rep, Math.max(inRange.length - rep, 0)]; g2.update(); $("#g2v").textContent = inRange.length ? D.pct(rep / inRange.length * 100) : "-"; $("#repHint").textContent = rep + " / " + inRange.length + "건";
+
+      var today = new Date(END.y, END.m - 1, 28), overdue = inRange.filter(function (f) { return f.step !== "완료" && due(f) < today; }).length;
+      $("#kpis").innerHTML =
+        '<div class="card kpi"><div class="lbl">조회기간 부적합</div><div class="val num">' + inRange.length + '<small>건</small></div><div class="meta">' + bs[0].label + " ~ " + bs[bs.length - 1].label + "</div></div>" +
+        '<div class="card kpi"><div class="lbl">Major (MA)</div><div class="val num ma">' + inRange.filter(function (f) { return f.grade === "MA"; }).length + '<small>건</small></div><div class="meta">시정조치(CAR) 필수 대상</div></div>' +
+        '<div class="card kpi"><div class="lbl">진행 중 CAR</div><div class="val num">' + (car.length - done) + '<small>건</small></div><div class="meta">작성 · 진행 · 결재 단계</div></div>' +
+        '<div class="card kpi"><div class="lbl">조치기한 초과</div><div class="val num warn">' + overdue + '<small>건</small></div><div class="meta">기준일 ' + END.y + "-" + String(END.m).padStart(2, "0") + "-28</div></div>";
+
+      $("#matrix").innerHTML = GR.map(function (g) {
+        var c = STEPS.map(function (s) { return inRange.filter(function (f) { return f.grade === g[0] && f.step === s; }).length; });
+        return '<tr><td><span class="gr ' + g[0] + '">' + g[0] + "</span></td>" + c.map(function (v) { return '<td class="r num">' + v + "</td>"; }).join("") + '<td class="r num"><b>' + c.reduce(function (a, b) { return a + b; }, 0) + "</b></td></tr>";
+      }).join("");
+      render._range = { from: from, to: to };
+      renderList();
+    };
+    var due = function (f) { return new Date(f.y, f.m - 1, f.d + (f.grade === "MA" ? 30 : 60)); };
+    var ds = function (d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
+
+    var renderList = function () {
+      var rg = S.bucket || render._range, today = new Date(END.y, END.m - 1, 28);
+      var list = F.filter(function (f) { return match(f) && f.k >= rg.from && f.k <= rg.to && (!S.step || f.step === S.step); }).sort(function (a, b) { return b.k - a.k || b.d - a.d; });
+      $("#listCnt").textContent = list.length + "건";
+      $("#chipf").innerHTML = S.bucket ? '<span class="chipf">기간: ' + S.bucket.label + ' <button type="button" id="clrB" aria-label="기간 필터 해제">×</button></span>' : "";
+      var c = $("#clrB"); if (c) c.addEventListener("click", function () { S.bucket = null; renderList(); });
+      $("#list").innerHTML = list.length ? list.slice(0, 200).map(function (f) {
+        var dd = due(f), over = f.step !== "완료" && dd < today;
+        return '<tr class="click" data-id="' + f.id + '"><td><b>' + f.id + '</b></td><td><span class="gr ' + f.grade + '">' + f.grade + "</span></td><td>" + f.type + "</td><td>" + f.dept + "</td><td>" + f.topic + "</td><td>" + ds(new Date(f.y, f.m - 1, f.d)) + '</td><td class="' + (over ? "over" : "") + '">' + ds(dd) + (over ? " ⚠" : "") + '</td><td class="c"><span class="badge ' + (f.step === "완료" ? "ok" : f.step === "결재" ? "" : "warn") + '">' + f.step + '</span></td><td class="c">' + (f.replied ? '<span class="badge ok">회신</span>' : '<span class="badge gray">미회신</span>') + "</td></tr>";
+      }).join("") : '<tr><td colspan="9" class="empty">조건에 맞는 부적합이 없습니다</td></tr>';
+    };
+
+    // 상세 + 단계 진행
+    var modal = D.modal($("#detail")), curF = null;
+    var openDetail = function (f) {
+      curF = f;
+      $("#dTitle").textContent = f.id + " · " + f.topic;
+      var si = STEPS.indexOf(f.step);
+      $("#dBody").innerHTML = '<dl class="dl"><dt>등급</dt><dd><span class="gr ' + f.grade + '">' + f.grade + "</span> " + GR.filter(function (g) { return g[0] === f.grade; })[0][1] + "</dd><dt>구분 / 부서</dt><dd>" + f.type + " · " + f.dept + "</dd><dt>발행일</dt><dd>" + ds(new Date(f.y, f.m - 1, f.d)) + "</dd><dt>조치기한</dt><dd>" + ds(due(f)) + "</dd><dt>통보서</dt><dd>" + (f.replied ? "회신 완료" : "미회신") + "</dd></dl>" +
+        '<div class="steps">' + STEPS.map(function (s, i) { return '<span class="' + (i < si ? "done" : i === si ? "on" : "") + '">' + (i + 1) + ". " + s + "</span>"; }).join("") + "</div>";
+      $("#dNext").disabled = f.step === "완료"; $("#dNext").textContent = f.step === "완료" ? "완료됨" : "다음 단계로 (" + STEPS[si + 1] + ")";
+      $("#dReply").disabled = f.replied;
+      modal.open();
+    };
+    var persist = function (f) { saved[f.id] = { step: f.step, replied: f.replied }; D.store.set("audit.edits", saved); };
+    $("#dNext").addEventListener("click", function () { var si = STEPS.indexOf(curF.step); if (si < 3) { curF.step = STEPS[si + 1]; if (si + 1 >= 2) curF.replied = true; persist(curF); render(); openDetail(curF); D.toast(curF.id + " → " + curF.step); } });
+    $("#dReply").addEventListener("click", function () { curF.replied = true; persist(curF); render(); openDetail(curF); D.toast("통보서 회신을 등록했습니다"); });
+
+    // 이벤트
+    $("#unit").addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; S.unit = b.getAttribute("data-u"); S.bucket = null; D.$$("#unit button").forEach(function (x) { x.classList.toggle("on", x === b); }); fillPeriod(); render(); });
+    $("#period").addEventListener("change", function (e) { S.end = +e.target.value; S.bucket = null; render(); });
+    [["#fType", "type"], ["#fDept", "dept"], ["#fGrade", "grade"]].forEach(function (p) { $(p[0]).addEventListener("change", function (e) { S[p[1]] = e.target.value; render(); }); });
+    $("#stTabs").addEventListener("click", function (e) { var b = e.target.closest("button"); if (!b) return; S.step = b.getAttribute("data-s"); D.$$("#stTabs button").forEach(function (x) { x.classList.toggle("on", x === b); }); renderList(); });
+    $("#list").addEventListener("click", function (e) { var tr = e.target.closest("tr[data-id]"); if (tr) openDetail(F.filter(function (f) { return f.id === tr.getAttribute("data-id"); })[0]); });
+
+    fillPeriod(); render();
+  })();
+  </script>
+</body>
+</html>
