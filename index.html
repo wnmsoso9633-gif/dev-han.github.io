@@ -4,24 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="탄소·ESG 데이터 플랫폼을 설계하고 운영하는 백엔드·풀스택 개발자 한승호의 포트폴리오" />
-  <meta name="theme-color" content="#0b0606" />
+  <meta name="theme-color" content="#0c0b09" />
   <title>Han Seungho | Developer Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&amp;family=Noto+Serif+KR:wght@300;400;500;700&amp;display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <div class="realm" aria-hidden="true"><canvas id="realm"></canvas></div>
-  <div class="scanlines" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
   <div class="cursor-glow" aria-hidden="true"></div>
 
-  <div class="announce" aria-hidden="true"><div class="announce-track"><span>★ NEW · 라이브 데모 5종 공개 — cbam · data · eco · audit · ESG insight &nbsp;■&nbsp; 정적/동적 탄소발자국 비교 대시보드 &nbsp;■&nbsp; CARBON · ESG DATA PLATFORM &nbsp;■&nbsp; OPEN TO COLLABORATION &nbsp;■&nbsp; </span><span>★ NEW · 라이브 데모 5종 공개 — cbam · data · eco · audit · ESG insight &nbsp;■&nbsp; 정적/동적 탄소발자국 비교 대시보드 &nbsp;■&nbsp; CARBON · ESG DATA PLATFORM &nbsp;■&nbsp; OPEN TO COLLABORATION &nbsp;■&nbsp; </span></div></div>
+  <div class="announce" aria-hidden="true"><div class="announce-track"><span>Live demos — cbam · data · eco · audit · ESG insight<b>◆</b>정적 · 동적 탄소발자국 비교 대시보드<b>◆</b>Carbon · ESG Data Platform<b>◆</b>Open to collaboration<b>◆</b></span><span>Live demos — cbam · data · eco · audit · ESG insight<b>◆</b>정적 · 동적 탄소발자국 비교 대시보드<b>◆</b>Carbon · ESG Data Platform<b>◆</b>Open to collaboration<b>◆</b></span></div></div>
 
   <header class="site-header">
     <div class="container header-inner">
       <nav class="nav nav-l"><a href="index.html" class="active">Home</a><a href="about.html">About</a></nav>
-      <a href="index.html" class="logo">DEV<i>·</i>HAN</a>
+      <a href="index.html" class="logo"><span class="seal" aria-hidden="true">한</span>DEV<i>·</i>HAN</a>
       <nav class="nav nav-r"><a href="projects.html">Projects</a><a href="demos.html">Demos</a><a href="engineering.html">Engineering</a></nav>
       <button class="nav-toggle" type="button" aria-label="메뉴" aria-expanded="false"><span></span></button>
     </div>
@@ -32,29 +32,36 @@
     <section class="hero">
       <div class="container hero-grid">
         <div>
-          <p class="eyebrow reveal">Player · Han Seungho</p>
-          <h1 class="reveal">DATA<br /><em>TAMER</em><span class="splash" aria-hidden="true">불을 뿜는 데이터!</span></h1>
-          <p class="hero-kr reveal">불을 뿜는 데이터를 길들이는 개발자, 한승호.</p>
-          <p class="hero-desc reveal">탄소·ESG 데이터 플랫폼의 백엔드와 분석 화면을 설계하고 운영합니다. 원본은 지키고, 복잡한 계산은 단순한 규칙으로 — 신뢰할 수 있는 구조를 한 블록씩 쌓습니다.</p>
+          <p class="eyebrow reveal">Han Seungho — Backend · Full-Stack</p>
+          <h1 class="reveal">Taming the<br /><em>flow</em> of data.</h1>
+          <p class="hero-kr reveal">구름처럼 흐르는 데이터를 다스리는 개발자, 한승호.</p>
+          <p class="hero-desc reveal">탄소·ESG 데이터 플랫폼의 백엔드와 분석 화면을 설계하고 운영합니다. 원본은 지키고, 복잡한 계산은 단순한 규칙으로 — 신뢰할 수 있는 구조를 한 층씩 쌓아 올립니다.</p>
           <div class="hero-actions reveal">
-            <a href="demos.html" class="btn btn-lava">▶ 라이브 데모 플레이</a>
+            <a href="demos.html" class="btn btn-seal">라이브 데모</a>
             <a href="projects.html" class="btn">프로젝트 보기</a>
           </div>
-          <div class="hud reveal" aria-hidden="true">
-            <div class="hud-row"><span>CLASS <b>BACKEND · FULL-STACK</b></span><span>DOMAIN <b>PCF · CBAM · OCF</b></span></div>
-            <div class="xpbar"><span class="hud-level">LV.UP</span><i></i></div>
-          </div>
+          <dl class="facts reveal">
+            <div><dt>Role</dt><dd>Backend · Full-Stack</dd></div>
+            <div><dt>Domain</dt><dd>PCF · CBAM · OCF</dd></div>
+            <div><dt>Stack</dt><dd>C# · Java · SQL</dd></div>
+          </dl>
         </div>
-        <div class="lair reveal">
-          <canvas id="dragon" tabindex="0" role="img" aria-label="픽셀 아트 붉은 용. 클릭하면 불을 뿜습니다."></canvas>
-          <p class="lair-hint">용을 <b>클릭</b>하면 불을 뿜습니다</p>
+        <div class="reveal">
+          <figure class="scroll" style="margin:0 auto;">
+            <span class="cord" aria-hidden="true"></span>
+            <div class="painting">
+              <canvas id="dragon" tabindex="0" role="img" aria-label="한지에 먹으로 그린 운룡도. 구름 사이로 용이 여의주를 쫓아 움직이며, 클릭하면 포효합니다."></canvas>
+              <div class="colophon" aria-hidden="true"><span class="v">雲從龍</span><span class="seal">雲<br />龍</span></div>
+            </div>
+          </figure>
+          <p class="lair-hint">그림을 <b>클릭</b>하면 용이 포효합니다</p>
         </div>
       </div>
     </section>
 
     <div class="hotbar-wrap" aria-hidden="true"><div class="hotbar">
-      <span class="slot"><i data-block="netherrack"></i>C#</span><span class="slot"><i data-block="magma"></i>ASP.NET</span><span class="slot"><i data-block="gold"></i>Dapper</span><span class="slot"><i data-block="lapis"></i>MariaDB</span><span class="slot"><i data-block="diamond"></i>PostgreSQL</span><span class="slot"><i data-block="obsidian"></i>Oracle</span><span class="slot"><i data-block="copper"></i>Java</span><span class="slot"><i data-block="emerald"></i>Spring</span><span class="slot"><i data-block="stone"></i>jQuery</span><span class="slot"><i data-block="lava"></i>Chart.js</span><span class="slot"><i data-block="obsidian" data-seed="9"></i>Ollama</span><span class="slot"><i data-block="gold" data-seed="12"></i>SQL Optimization</span>
-      <span class="slot"><i data-block="netherrack"></i>C#</span><span class="slot"><i data-block="magma"></i>ASP.NET</span><span class="slot"><i data-block="gold"></i>Dapper</span><span class="slot"><i data-block="lapis"></i>MariaDB</span><span class="slot"><i data-block="diamond"></i>PostgreSQL</span><span class="slot"><i data-block="obsidian"></i>Oracle</span><span class="slot"><i data-block="copper"></i>Java</span><span class="slot"><i data-block="emerald"></i>Spring</span><span class="slot"><i data-block="stone"></i>jQuery</span><span class="slot"><i data-block="lava"></i>Chart.js</span><span class="slot"><i data-block="obsidian" data-seed="9"></i>Ollama</span><span class="slot"><i data-block="gold" data-seed="12"></i>SQL Optimization</span>
+      <span class="slot">C#</span><span class="slot">ASP.NET</span><span class="slot">Dapper</span><span class="slot">MariaDB</span><span class="slot">PostgreSQL</span><span class="slot">Oracle</span><span class="slot">Java</span><span class="slot">Spring</span><span class="slot">jQuery</span><span class="slot">Chart.js</span><span class="slot">Ollama</span><span class="slot">SQL Optimization</span>
+      <span class="slot">C#</span><span class="slot">ASP.NET</span><span class="slot">Dapper</span><span class="slot">MariaDB</span><span class="slot">PostgreSQL</span><span class="slot">Oracle</span><span class="slot">Java</span><span class="slot">Spring</span><span class="slot">jQuery</span><span class="slot">Chart.js</span><span class="slot">Ollama</span><span class="slot">SQL Optimization</span>
     </div></div>
 
     <section class="section">
@@ -65,30 +72,30 @@
         </div>
         <div class="shop">
           <article class="item reveal" data-tags="platform backend">
-            <div class="art" data-block="netherrack"><span class="cat">Platform</span><span class="no">01</span></div>
+            <div class="art" data-ink="mountain" data-seed="3"><span class="cat">Platform</span><span class="no">01</span><span class="seal" aria-hidden="true">山</span></div>
             <div class="meta">
               <div class="tags"><span>Platform</span><span>Backend</span></div>
               <h3>탄소종합솔루션 — 공통기준 데이터 파운데이션</h3>
               <p class="sum">인터페이스로 들어오는 이기종 데이터를 하나의 공통기준으로 모으고, PCF·CBAM·OCF가 각자의 산정 기준으로 같은 데이터를 재사용하도록 만든 데이터 기반 플랫폼.</p>
-              <div class="actions"><a href="demos.html#demo-data" class="demo-link">▶ data insight 데모</a><a href="projects.html" class="link-u">자세히</a></div>
+              <div class="actions"><a href="demos.html#demo-data" class="demo-link">data insight 데모</a><a href="projects.html" class="link-u">자세히</a></div>
             </div>
           </article>
           <article class="item reveal" data-tags="dashboard frontend backend">
-            <div class="art" data-block="magma"><span class="ribbon-tag">NEW</span><span class="cat">Dashboard</span><span class="no">02</span></div>
+            <div class="art" data-ink="plum" data-seed="5"><span class="ribbon-tag">NEW</span><span class="cat">Dashboard</span><span class="no">02</span><span class="seal" aria-hidden="true">梅</span></div>
             <div class="meta">
               <div class="tags"><span>Dashboard</span><span>Frontend</span><span>Backend</span></div>
               <h3>정적·동적 탄소발자국 비교 대시보드</h3>
               <p class="sum">저장된 산정값(정적)과 현재 데이터로 재계산한 값(동적)을 한 화면에서 비교하고, 전 프로젝트를 하나의 시야로 집계하는 분석 대시보드.</p>
-              <div class="actions"><a href="demos.html#demo-eco" class="demo-link">▶ eco insight 데모</a><a href="projects.html" class="link-u">자세히</a></div>
+              <div class="actions"><a href="demos.html#demo-eco" class="demo-link">eco insight 데모</a><a href="projects.html" class="link-u">자세히</a></div>
             </div>
           </article>
           <article class="item reveal" data-tags="backend automation">
-            <div class="art" data-block="obsidian"><span class="cat">Pipeline</span><span class="no">03</span></div>
+            <div class="art" data-ink="bamboo" data-seed="8"><span class="cat">Pipeline</span><span class="no">03</span><span class="seal" aria-hidden="true">竹</span></div>
             <div class="meta">
               <div class="tags"><span>Backend</span><span>Automation</span></div>
               <h3>동적 재계산 파이프라인 &amp; 테이블 동기화</h3>
               <p class="sum">정적 원본을 보존한 채 동적 계산용 테이블 세트에 데이터를 재적재하고, 산정·기여도 갱신까지 한 번에 처리하는 재계산 파이프라인.</p>
-              <div class="actions"><a href="demos.html#demo-cbam" class="demo-link">▶ cbam insight 데모</a><a href="projects.html" class="link-u">자세히</a></div>
+              <div class="actions"><a href="demos.html#demo-cbam" class="demo-link">cbam insight 데모</a><a href="projects.html" class="link-u">자세히</a></div>
             </div>
           </article>
         </div>
@@ -98,34 +105,34 @@
     <section class="section" style="padding-top:0;">
       <div class="container">
         <div class="sec-head">
-          <div><p class="eyebrow">Live Demos</p><h2 class="h2">월드 <em>선택</em></h2></div>
+          <div><p class="eyebrow">Live Demos</p><h2 class="h2">직접 <em>다뤄 보기</em></h2></div>
           <a href="demos.html" class="link-u">데모 페이지로</a>
         </div>
         <div class="worlds reveal">
           <div class="world" tabindex="0" role="button" data-demo-id="cbam" data-demo="demos/cbam.html" data-title="cbam insight — CBAM 내재배출량 정적·동적 비교">
-            <div class="world-icon" data-block="emerald"><b>C</b></div>
+            <div class="world-icon seal" aria-hidden="true">C</div>
             <div><h3>cbam insight <small>CBAM · SEE</small></h3><p>저장된 내재배출량(정적)과 최신 데이터 재계산값(동적)을 비교하고 변경 이력을 추적</p><p class="feat">자동 재계산 · 변경 이력 · 활동자료 드릴다운</p></div>
-            <div class="go"><span class="btn btn-sm btn-solid">▶ 플레이</span></div>
+            <div class="go"><span class="btn btn-sm">열어 보기</span></div>
           </div>
           <div class="world" tabindex="0" role="button" data-demo-id="data" data-demo="demos/data.html" data-title="data insight — 통합 데이터 대시보드">
-            <div class="world-icon" data-block="lapis"><b>D</b></div>
+            <div class="world-icon seal" aria-hidden="true">D</div>
             <div><h3>data insight <small>ERP · MES · IoT</small></h3><p>ERP·MES·IoT 데이터 연동 파이프라인과 사업장별 생산·에너지 실적 통합 대시보드</p><p class="feat">연동 설정 · 주기 동기화 · 월별 추이</p></div>
-            <div class="go"><span class="btn btn-sm btn-solid">▶ 플레이</span></div>
+            <div class="go"><span class="btn btn-sm">열어 보기</span></div>
           </div>
           <div class="world" tabindex="0" role="button" data-demo-id="eco" data-demo="demos/eco.html" data-title="eco insight — 전과정 탄소발자국 대시보드">
-            <div class="world-icon" data-block="diamond"><b>E</b></div>
+            <div class="world-icon seal" aria-hidden="true">E</div>
             <div><h3>eco insight <small>PCF · LCA</small></h3><p>프로젝트 × 단위공정 탄소발자국을 정적/동적 모드로 비교하는 분석 대시보드</p><p class="feat">범주 누적 차트 · 검색·정렬·CSV · 상세 팝업</p></div>
-            <div class="go"><span class="btn btn-sm btn-solid">▶ 플레이</span></div>
+            <div class="go"><span class="btn btn-sm">열어 보기</span></div>
           </div>
           <div class="world" tabindex="0" role="button" data-demo-id="audit" data-demo="demos/audit.html" data-title="audit insight — 부적합·시정조치 현황">
-            <div class="world-icon" data-block="gold"><b>A</b></div>
+            <div class="world-icon seal" aria-hidden="true">A</div>
             <div><h3>audit insight <small>Finding · CAR</small></h3><p>감사 부적합 사항의 등급별 발생 추이와 시정 조치·통보서 회신 현황</p><p class="feat">월별/분기별 전환 · 완료율 게이지 · 목록 필터</p></div>
-            <div class="go"><span class="btn btn-sm btn-solid">▶ 플레이</span></div>
+            <div class="go"><span class="btn btn-sm">열어 보기</span></div>
           </div>
           <div class="world" tabindex="0" role="button" data-demo-id="esg" data-demo="demos/esg.html" data-title="ESG insight — 협력사 ESG 진단 현황">
-            <div class="world-icon" data-block="copper"><b>S</b></div>
+            <div class="world-icon seal" aria-hidden="true">S</div>
             <div><h3>ESG insight <small>Supply chain</small></h3><p>협력사 ESG 설문 진도, 영역별 점수, 검증 대기와 리스크 업체를 한눈에</p><p class="feat">설문 레이더 · 등급 분포 · 업체 검색</p></div>
-            <div class="go"><span class="btn btn-sm btn-solid">▶ 플레이</span></div>
+            <div class="go"><span class="btn btn-sm">열어 보기</span></div>
           </div>
         </div>
       </div>
@@ -135,9 +142,9 @@
       <div class="container">
         <div class="sec-head"><div><p class="eyebrow">Philosophy</p><h2 class="h2">How I <em>build</em></h2></div></div>
         <div class="principles">
-          <div class="principle reveal"><span class="n">I</span><span class="label">도전 과제 달성!</span><h3>원본은 건드리지 않는다</h3><p>정적 원본을 보존하고 동적 계산은 별도 테이블 세트에서 수행합니다. 되돌릴 수 있는 구조가 가장 안전합니다.</p></div>
-          <div class="principle reveal"><span class="n">II</span><span class="label">도전 과제 달성!</span><h3>하나의 쿼리, 두 개의 모드</h3><p>모드마다 쿼리를 복제하지 않고 실행 시점에 테이블만 치환해, 유지보수 비용을 한 곳으로 모읍니다.</p></div>
-          <div class="principle reveal"><span class="n">III</span><span class="label">도전 과제 달성!</span><h3>실패는 격리한다</h3><p>대량 재계산도 단위별 트랜잭션으로 나눠, 일부가 실패해도 전체가 무너지지 않도록 설계합니다.</p></div>
+          <div class="principle reveal"><span class="n">壹</span><span class="label">Principle I</span><h3>원본은 건드리지 않는다</h3><p>정적 원본을 보존하고 동적 계산은 별도 테이블 세트에서 수행합니다. 되돌릴 수 있는 구조가 가장 안전합니다.</p></div>
+          <div class="principle reveal"><span class="n">貳</span><span class="label">Principle II</span><h3>하나의 쿼리, 두 개의 모드</h3><p>모드마다 쿼리를 복제하지 않고 실행 시점에 테이블만 치환해, 유지보수 비용을 한 곳으로 모읍니다.</p></div>
+          <div class="principle reveal"><span class="n">參</span><span class="label">Principle III</span><h3>실패는 격리한다</h3><p>대량 재계산도 단위별 트랜잭션으로 나눠, 일부가 실패해도 전체가 무너지지 않도록 설계합니다.</p></div>
         </div>
       </div>
     </section>
@@ -147,7 +154,7 @@
         <p class="eyebrow">Let’s Connect</p>
         <h2 class="h2">함께 <em>단단한 것</em>을<br />쌓아 볼까요?</h2>
         <p class="lead" style="margin:22px auto 40px;">협업 및 문의는 GitHub 또는 프로젝트 페이지를 통해 연락해 주세요.</p>
-        <a class="btn btn-solid" href="https://github.com/dev-han" target="_blank" rel="noreferrer">▶ GitHub</a>
+        <a class="btn btn-seal" href="https://github.com/dev-han" target="_blank" rel="noreferrer">GitHub</a>
       </div>
     </section>
   </main>
