@@ -4,20 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="한승호 — 백엔드·풀스택 개발자 소개와 기술 스택" />
-  <meta name="theme-color" content="#0c0b09" />
+  <meta name="theme-color" content="#031a2b" />
   <title>About | Han Seungho</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&amp;family=East+Sea+Dokdo&amp;family=Song+Myung&amp;family=Yuji+Syuku&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <div class="realm" aria-hidden="true"><canvas id="realm"></canvas></div>
-  <div class="grain" aria-hidden="true"></div>
+  <canvas id="tank" aria-hidden="true"></canvas>
 
   <header class="site-header">
     <div class="container header-inner">
       <nav class="nav nav-l"><a href="index.html">Home</a><a href="about.html" class="active">About</a></nav>
-      <a href="index.html" class="logo"><span class="seal" aria-hidden="true">한</span>DEV<i>·</i>HAN</a>
+      <a href="index.html" class="logo"><span class="logo-dot" aria-hidden="true"></span>DEV<i>·</i>HAN</a>
       <nav class="nav nav-r"><a href="projects.html">Projects</a><a href="demos.html">Demos</a><a href="engineering.html">Engineering</a></nav>
       <button class="nav-toggle" type="button" aria-label="메뉴" aria-expanded="false"><span></span></button>
     </div>
@@ -28,14 +28,14 @@
     <section class="page-head">
       <div class="container">
         <p class="eyebrow">About</p>
-        <h1>데이터 뒤의<br /><em>엔지니어</em></h1>
+        <h1>소개</h1>
       </div>
     </section>
 
     <section class="section" style="padding-top:40px;">
       <div class="container about-grid">
         <div>
-          <p class="statement reveal">제조 현장과 <em>탄소 규제</em> 사이에서,<br />데이터가 흐르는 길을 설계합니다.</p>
+          <p class="statement reveal">제조 현장의 데이터를 모아 <em>탄소 배출량</em>을 계산하는 시스템을 만들고 있습니다.</p>
           <div class="prose reveal">
             <p>인터페이스로 수집한 데이터가 <strong>공통기준</strong>에 모이고, PCF·CBAM·OCF가 각자의 계산 기준으로 그 데이터를 가져가 대시보드·산정·보고서로 이어지는 구조 위에서 일합니다. 그중 MES, LOT, BOM, FEMS 영역의 테이블 분석, 설계, 데이터 연결을 맡고 있습니다.</p>
             <p>하나의 계산을 <strong>정적(저장값)과 동적(재계산값)</strong> 두 모드로 안전하게 운영하는 구조, 다중 DB 환경의 스키마 동기화처럼 <em >기존 동작은 그대로 두고 기능을 얹는</em> 작업을 좋아합니다.</p>

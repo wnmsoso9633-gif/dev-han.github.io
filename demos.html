@@ -4,23 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="cbam · data · eco · audit · ESG insight — 직접 조작해 볼 수 있는 대시보드 라이브 데모" />
-  <meta name="theme-color" content="#0c0b09" />
+  <meta name="theme-color" content="#031a2b" />
   <title>Live Demos | Han Seungho</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&amp;family=East+Sea+Dokdo&amp;family=Song+Myung&amp;family=Yuji+Syuku&amp;display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <div class="realm" aria-hidden="true"><canvas id="realm"></canvas></div>
-  <div class="grain" aria-hidden="true"></div>
-  <div class="cursor-glow" aria-hidden="true"></div>
+  <canvas id="tank" aria-hidden="true"></canvas>
 
-  <div class="announce" aria-hidden="true"><div class="announce-track"><span>Live demos — cbam · data · eco · audit · ESG insight<b>◆</b>정적 · 동적 탄소발자국 비교 대시보드<b>◆</b>Carbon · ESG Data Platform<b>◆</b>Open to collaboration<b>◆</b></span><span>Live demos — cbam · data · eco · audit · ESG insight<b>◆</b>정적 · 동적 탄소발자국 비교 대시보드<b>◆</b>Carbon · ESG Data Platform<b>◆</b>Open to collaboration<b>◆</b></span></div></div>
+  <div class="announce" aria-hidden="true"><div class="announce-track"><span>라이브 데모 5종 공개<b>·</b>F 키로 물고기에게 먹이를 줄 수 있어요<b>·</b>빈 곳을 클릭하면 물고기가 놀라서 흩어져요<b>·</b>탄소 · ESG 데이터 플랫폼 개발<b>·</b></span><span>라이브 데모 5종 공개<b>·</b>F 키로 물고기에게 먹이를 줄 수 있어요<b>·</b>빈 곳을 클릭하면 물고기가 놀라서 흩어져요<b>·</b>탄소 · ESG 데이터 플랫폼 개발<b>·</b></span></div></div>
 
   <header class="site-header">
     <div class="container header-inner">
       <nav class="nav nav-l"><a href="index.html">Home</a><a href="about.html">About</a></nav>
-      <a href="index.html" class="logo"><span class="seal" aria-hidden="true">한</span>DEV<i>·</i>HAN</a>
+      <a href="index.html" class="logo"><span class="logo-dot" aria-hidden="true"></span>DEV<i>·</i>HAN</a>
       <nav class="nav nav-r"><a href="projects.html">Projects</a><a href="demos.html" class="active">Demos</a><a href="engineering.html">Engineering</a></nav>
       <button class="nav-toggle" type="button" aria-label="메뉴" aria-expanded="false"><span></span></button>
     </div>
@@ -31,7 +30,7 @@
     <section class="page-head">
       <div class="container">
         <p class="eyebrow">Live Demos</p>
-        <h1>라이브 <em>데모</em></h1>
+        <h1>라이브 데모</h1>
         <p>실무에서 만든 탄소·ESG 대시보드 화면을 브라우저만으로 돌아가도록 다시 구성했습니다. 필터·모드 전환·차트·표·CSV 내보내기까지 실제로 동작하며, 고객사·프로젝트명과 수치는 모두 일반화한 샘플 데이터입니다.</p>
       </div>
     </section>
@@ -40,36 +39,36 @@
       <div class="container">
         <div class="worlds reveal">
           <div class="world" tabindex="0" role="button" data-demo-id="cbam" data-demo="demos/cbam.html" data-title="cbam insight — CBAM 내재배출량 정적·동적 비교">
-            <div class="world-icon seal" aria-hidden="true">C</div>
+            <div class="world-icon" aria-hidden="true">C</div>
             <div><h3>cbam insight <small>CBAM · SEE</small></h3><p>저장된 내재배출량(정적)과 최신 데이터 재계산값(동적)을 비교하고 변경 이력을 추적</p><p class="feat">자동 재계산 · 변경 이력 · 활동자료 드릴다운</p></div>
             <div class="go"><span class="btn btn-sm">열어 보기</span></div>
           </div>
           <div class="world" tabindex="0" role="button" data-demo-id="data" data-demo="demos/data.html" data-title="data insight — 통합 데이터 대시보드">
-            <div class="world-icon seal" aria-hidden="true">D</div>
+            <div class="world-icon" aria-hidden="true">D</div>
             <div><h3>data insight <small>ERP · MES · IoT</small></h3><p>ERP·MES·IoT 데이터 연동 파이프라인과 사업장별 생산·에너지 실적 통합 대시보드</p><p class="feat">연동 설정 · 주기 동기화 · 월별 추이</p></div>
             <div class="go"><span class="btn btn-sm">열어 보기</span></div>
           </div>
           <div class="world" tabindex="0" role="button" data-demo-id="eco" data-demo="demos/eco.html" data-title="eco insight — 전과정 탄소발자국 대시보드">
-            <div class="world-icon seal" aria-hidden="true">E</div>
+            <div class="world-icon" aria-hidden="true">E</div>
             <div><h3>eco insight <small>PCF · LCA</small></h3><p>프로젝트 × 단위공정 탄소발자국을 정적/동적 모드로 비교하는 분석 대시보드</p><p class="feat">범주 누적 차트 · 검색·정렬·CSV · 상세 팝업</p></div>
             <div class="go"><span class="btn btn-sm">열어 보기</span></div>
           </div>
           <div class="world" tabindex="0" role="button" data-demo-id="audit" data-demo="demos/audit.html" data-title="audit insight — 부적합·시정조치 현황">
-            <div class="world-icon seal" aria-hidden="true">A</div>
+            <div class="world-icon" aria-hidden="true">A</div>
             <div><h3>audit insight <small>Finding · CAR</small></h3><p>감사 부적합 사항의 등급별 발생 추이와 시정 조치·통보서 회신 현황</p><p class="feat">월별/분기별 전환 · 완료율 게이지 · 목록 필터</p></div>
             <div class="go"><span class="btn btn-sm">열어 보기</span></div>
           </div>
           <div class="world" tabindex="0" role="button" data-demo-id="esg" data-demo="demos/esg.html" data-title="ESG insight — 협력사 ESG 진단 현황">
-            <div class="world-icon seal" aria-hidden="true">S</div>
+            <div class="world-icon" aria-hidden="true">S</div>
             <div><h3>ESG insight <small>Supply chain</small></h3><p>협력사 ESG 설문 진도, 영역별 점수, 검증 대기와 리스크 업체를 한눈에</p><p class="feat">설문 레이더 · 등급 분포 · 업체 검색</p></div>
             <div class="go"><span class="btn btn-sm">열어 보기</span></div>
           </div>
         </div>
 
         <div class="principles" style="margin-top:70px;">
-          <div class="principle reveal"><span class="n">壹</span><span class="label">구현 방식</span><h3>Vanilla JS + Chart.js</h3><p>빌드 도구 없이 정적 HTML 한 장씩. 서버 대신 샘플 데이터 모듈과 계산 로직이 브라우저에서 돌아갑니다.</p></div>
-          <div class="principle reveal"><span class="n">貳</span><span class="label">정적 · 동적</span><h3>같은 화면, 두 개의 모드</h3><p>cbam · eco 데모는 저장값(정적)과 재계산값(동적)을 같은 구성으로 비교하는 실제 설계를 그대로 옮겼습니다.</p></div>
-          <div class="principle reveal"><span class="n">參</span><span class="label">데이터 안내</span><h3>모든 수치는 샘플</h3><p>사업장·고객·담당자 이름과 수치는 임의로 생성했습니다. 화면 구성과 동작만 실제와 같습니다.</p></div>
+          <div class="principle reveal"><span class="n">1</span><span class="label">구현 방식</span><h3>Vanilla JS + Chart.js</h3><p>빌드 도구 없이 정적 HTML 한 장씩. 서버 대신 샘플 데이터 모듈과 계산 로직이 브라우저에서 돌아갑니다.</p></div>
+          <div class="principle reveal"><span class="n">2</span><span class="label">정적 · 동적</span><h3>같은 화면, 두 개의 모드</h3><p>cbam · eco 데모는 저장값(정적)과 재계산값(동적)을 같은 구성으로 비교하는 실제 설계를 그대로 옮겼습니다.</p></div>
+          <div class="principle reveal"><span class="n">3</span><span class="label">데이터 안내</span><h3>모든 수치는 샘플</h3><p>사업장·고객·담당자 이름과 수치는 임의로 생성했습니다. 화면 구성과 동작만 실제와 같습니다.</p></div>
         </div>
       </div>
     </section>
